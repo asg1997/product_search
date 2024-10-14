@@ -7,8 +7,8 @@ import 'package:product_search/core/widgets/main_button.dart';
 import 'package:product_search/resources/resources.dart';
 import 'package:product_search/view/components/select_stores_widget.dart';
 
-class ProductSearch5 extends ConsumerWidget {
-  const ProductSearch5({super.key});
+class SearchFiltersPage extends ConsumerWidget {
+  const SearchFiltersPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
