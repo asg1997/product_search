@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:product_search/core/utils/consts/app_decoration.dart';
 import 'package:product_search/core/widgets/price_widget.dart';
+import 'package:product_search/models/product/product.dart';
 import 'package:product_search/resources/resources.dart';
-import 'package:product_search/view/models/product/product.dart';
 
 class ProductGridView extends ConsumerWidget {
   const ProductGridView({

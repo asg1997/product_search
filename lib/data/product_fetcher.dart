@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:product_search/models/product/product.dart';
 import 'package:product_search/resources/resources.dart';
-import 'package:product_search/view/models/product/product.dart';
 
 final productFetcherProvider =
     Provider<ProductFetcher>(_ProductFetcherImpl.new);

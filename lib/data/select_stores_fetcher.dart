@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:product_search/view/models/select_stores/select_stores.dart';
+import 'package:product_search/models/select_stores/select_stores.dart';
 
 final selectStoresFetcherProvider =
     Provider<SelectStoresFetcher>(_SelectStoresFetcherImpl.new);
