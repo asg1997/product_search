@@ -6,7 +6,6 @@ import 'package:product_search/core/utils/consts/app_fonts.dart';
 import 'package:product_search/core/widgets/loading_widget.dart';
 import 'package:product_search/core/widgets/main_app_bar.dart';
 import 'package:product_search/resources/resources.dart';
-import 'package:product_search/view/components/gallery_button.dart';
 
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({super.key});
@@ -123,7 +122,7 @@ class _FooterWidget extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const GalleryButton(),
+        // const GalleryButton(),
         _SearchButton(controller: controller),
         const _SettingsButton(),
       ],
