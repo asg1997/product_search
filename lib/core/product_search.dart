@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:product_search/view/scanner_page.dart';
+import 'package:product_search/view/product_search_result_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -11,7 +11,9 @@ class App extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(scaffoldBackgroundColor: Colors.white),
         debugShowCheckedModeBanner: false,
-        home: const ScannerPage(),
+        home: const ProductSearchResultPage(),
+
+        // const ScannerPage(),
       ),
     );
   }
