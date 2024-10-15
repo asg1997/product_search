@@ -57,9 +57,6 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - photo_manager (2.0.0):
-    - Flutter
-    - FlutterMacOS
   - PromisesObjC (2.4.0)
 
 DEPENDENCIES:
@@ -67,7 +64,6 @@ DEPENDENCIES:
   - camerax (from `.symlinks/plugins/camerax/ios`)
   - Flutter (from `Flutter`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
-  - photo_manager (from `.symlinks/plugins/photo_manager/ios`)
 
 SPEC REPOS:
   trunk:
@@ -93,8 +89,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
-  photo_manager:
-    :path: ".symlinks/plugins/photo_manager/ios"
 
 SPEC CHECKSUMS:
   camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
@@ -112,9 +106,8 @@ SPEC CHECKSUMS:
   MLKitVision: e858c5f125ecc288e4a31127928301eaba9ae0c1
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  photo_manager: ff695c7a1dd5bc379974953a2b5c0a293f7c4c8a
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
 PODFILE CHECKSUM: 8cfff4131440564df5fa4abedcaed52c69c614a0
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.14.2
