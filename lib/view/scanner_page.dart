@@ -158,10 +158,7 @@ class _SettingsButton extends ConsumerWidget {
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SearchFiltersPage()),
-        ),
+        onTap: () => SearchFiltersPage.navigate(context),
         child: Image.asset(AppImages.settings),
       ),
     );

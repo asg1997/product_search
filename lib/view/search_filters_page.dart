@@ -9,7 +9,11 @@ import 'package:product_search/view/components/select_stores_widget.dart';
 
 class SearchFiltersPage extends ConsumerWidget {
   const SearchFiltersPage({super.key});
-
+  static void navigate(BuildContext context) => Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+            builder: (context) => const SearchFiltersPage()),
+      );
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
