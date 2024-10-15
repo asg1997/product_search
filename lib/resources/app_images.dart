@@ -11,6 +11,7 @@ class AppImages {
   static const String checkFill = 'assets/images/check_fill.png';
   static const String checkUnfill = 'assets/images/check_unfill.png';
   static const String close = 'assets/images/close.png';
+  static const String focus = 'assets/images/focus.png';
   static const String image = 'assets/images/image.png';
   static const String photo = 'assets/images/photo.png';
   static const String rectangle = 'assets/images/rectangle.png';

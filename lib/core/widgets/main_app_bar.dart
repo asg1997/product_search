@@ -5,16 +5,18 @@ import 'package:product_search/core/utils/consts/app_fonts.dart';
 
 class MainAppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
   const MainAppBarWidget({
+    this.transparent = false,
     super.key,
   });
 
+  final bool transparent;
   @override
   Size get preferredSize => const Size(double.infinity, 44);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: transparent ? Colors.transparent : Colors.white,
         centerTitle: true,
         elevation: 0,
 
