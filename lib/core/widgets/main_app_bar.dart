@@ -16,24 +16,28 @@ class MainAppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AppBar(
-        backgroundColor: transparent ? Colors.transparent : Colors.white,
-        centerTitle: true,
-        elevation: 0,
+      automaticallyImplyLeading: false,
+      backgroundColor: transparent ? Colors.transparent : Colors.white,
+      centerTitle: true,
+      elevation: 0,
 
-        // НАЗВАНИЕ
-        title: RichText(
-          text: TextSpan(
-            children: <TextSpan>[
-              TextSpan(
-                  text: 'Product',
-                  style: AppFonts.linksButtonSmall
-                      .copyWith(color: AppColors.mainBlack)),
-              TextSpan(
-                  text: ' Search',
-                  style: AppFonts.linksButtonSmall
-                      .copyWith(color: AppColors.mainYellow1)),
-            ],
-          ),
-        ));
+      // НАЗВАНИЕ
+      title: RichText(
+        text: TextSpan(
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Product',
+              style: AppFonts.linksButtonSmall
+                  .copyWith(color: AppColors.mainBlack),
+            ),
+            TextSpan(
+              text: ' Search',
+              style: AppFonts.linksButtonSmall
+                  .copyWith(color: AppColors.mainYellow1),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
