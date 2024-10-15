@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:product_search/core/utils/consts/app_fonts.dart';
+import 'package:product_search/core/widgets/loading_widget.dart';
 import 'package:product_search/view/components/select_stores_grid_view.dart';
+import 'package:product_search/view/provider/get_filter_stories_provider.dart';
 
 class SelectStoresWidget extends ConsumerWidget {
   const SelectStoresWidget({super.key});
@@ -17,7 +19,16 @@ class SelectStoresWidget extends ConsumerWidget {
           Text('Select stores', style: AppFonts.linksButtonSmall),
 
           // чекбокс
-          const SelectStoresGridView()
+          ref.watch(getFilterStoriesProvider).when(
+                data: (filters) => FiltersStoresGridView(
+                  filterStories: filters,
+                ),
+                error: (_, __) => Container(),
+                loading: () => const SizedBox(
+                  height: 200,
+                  child: LoadingWidget(),
+                ),
+              ),
         ],
       ),
     );

@@ -4,17 +4,17 @@ import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/core/utils/consts/app_fonts.dart';
 import 'package:product_search/resources/resources.dart';
 
-class CheckboxWidget extends StatelessWidget {
-  const CheckboxWidget({
+class FilterWidget extends StatelessWidget {
+  const FilterWidget({
     required this.isChecked,
     required this.onChanged,
-    required this.label, // Добавляем подпись для каждого чекбокса
+    required this.title,
     super.key,
   });
 
   final bool isChecked;
   final ValueChanged<bool?> onChanged;
-  final String label;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class CheckboxWidget extends StatelessWidget {
           ),
           const Gap(8),
           Text(
-            label, // Используем переданную подпись
+            title, // Используем переданную подпись
             style: AppFonts.medium16.copyWith(
               color: isChecked ? AppColors.mainBlack : AppColors.mainDarkGray,
             ),

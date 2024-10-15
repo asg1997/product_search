@@ -14,7 +14,7 @@ class ProductSearchResultPage extends ConsumerWidget {
     return Scaffold(
       appBar: const MainAppBarWidget(),
       body: ref.watch(getProductsProvider).when(
-            data: (products) => Container(
+            data: (products) => ColoredBox(
               color: AppColors.mainLightGrey,
               child: ProductGridView(
                 products: products,

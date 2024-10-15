@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:product_search/view/components/check_box_widget.dart';
-import 'package:product_search/view/provider/check_box_provider.dart'; // Импортируем CheckboxWidget
+import 'package:product_search/models/filter_stores/filter_stores.dart';
+import 'package:product_search/view/components/filter_widget.dart';
 
-class SelectStoresGridView extends ConsumerWidget {
-  const SelectStoresGridView({
+class FiltersStoresGridView extends ConsumerWidget {
+  const FiltersStoresGridView({
+    required this.filterStories,
     super.key,
   });
 
+  final FilterStories filterStories;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final checkboxStates =
-        ref.watch(checkboxProvider); // Наблюдаем за состоянием чекбоксов
-
-    final storeNames = [
-      'aliexpress',
-      'amazon',
-      'ebay',
-      'walmart',
-      'bestbuy',
-      'target',
-      'ikea',
-      'costco',
-      'etsy',
-      'shopify'
-    ]; // Имена магазинов
-
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.only(top: 14),
@@ -35,20 +22,26 @@ class SelectStoresGridView extends ConsumerWidget {
         childAspectRatio: 148 / 26,
         mainAxisSpacing: 14,
       ),
-      itemCount: checkboxStates.length,
+      itemCount: filterStories.length,
       shrinkWrap: true,
-      itemBuilder: (_, int index) {
-        final isChecked = checkboxStates[index]; // Получаем состояние чекбокса
-        return CheckboxWidget(
-          isChecked: isChecked,
-          label: storeNames[index], // Подпись для каждого чекбокса
-          onChanged: (newValue) {
-            ref
-                .read(checkboxProvider.notifier)
-                .toggleCheckbox(index); // Переключаем состояние чекбокса
-          },
-        );
-      },
+      itemBuilder: (_, int index) => _FilterWidget(
+        filterStores: filterStories[index],
+      ),
+    );
+  }
+}
+
+class _FilterWidget extends ConsumerWidget {
+  const _FilterWidget({required this.filterStores, super.key});
+
+  final FilterStores filterStores;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FilterWidget(
+      isChecked: filterStores.isSelected,
+      title: filterStores.title,
+      onChanged: (_) {},
     );
   }
 }
