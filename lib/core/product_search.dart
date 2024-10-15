@@ -8,10 +8,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-        child: MaterialApp(
-      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-      debugShowCheckedModeBanner: false,
-      home: const ScannerPage(),
-    ));
+      child: MaterialApp(
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+        debugShowCheckedModeBanner: false,
+        home: const ScannerPage(),
+      ),
+    );
   }
 }

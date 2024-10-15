@@ -6,6 +6,7 @@ import 'package:product_search/core/utils/consts/app_fonts.dart';
 import 'package:product_search/core/widgets/loading_widget.dart';
 import 'package:product_search/core/widgets/main_app_bar.dart';
 import 'package:product_search/resources/resources.dart';
+import 'package:product_search/view/search_filters_page.dart';
 
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({super.key});
@@ -157,7 +158,10 @@ class _SettingsButton extends ConsumerWidget {
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {},
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SearchFiltersPage()),
+        ),
         child: Image.asset(AppImages.settings),
       ),
     );
