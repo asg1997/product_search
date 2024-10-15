@@ -5,8 +5,8 @@ import 'package:product_search/core/widgets/loading_widget.dart';
 import 'package:product_search/view/components/select_stores_grid_view.dart';
 import 'package:product_search/view/provider/get_filter_stories_provider.dart';
 
-class SelectStoresWidget extends ConsumerWidget {
-  const SelectStoresWidget({super.key});
+class FilterStoresWidget extends ConsumerWidget {
+  const FilterStoresWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

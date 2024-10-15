@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:product_search/models/filter_stores/filter_stores.dart';
-import 'package:product_search/view/components/filter_widget.dart';
+import 'package:product_search/view/components/filter_stores_widget.dart';
 
 class FiltersStoresGridView extends ConsumerWidget {
   const FiltersStoresGridView({
