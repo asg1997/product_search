@@ -35,8 +35,8 @@ class SearchFiltersPage extends ConsumerWidget {
               color: AppColors.mainLightGrey,
             ),
 
-            // select stores gridview
-            const SelectStoresWidget(),
+            // фильтрация
+            const FilterStoresWidget(),
 
             const Spacer(),
 
