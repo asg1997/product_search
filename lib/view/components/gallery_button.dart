@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:product_search/resources/resources.dart';
 
 class GalleryButton extends StatefulWidget {
   const GalleryButton({super.key});
@@ -46,9 +47,25 @@ class _GalleryButtonState extends State<GalleryButton> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.square(
-      dimension: 53,
-      child: lastImage != null ? Image.file(lastImage!) : const Placeholder(),
-    );
+    return lastImage != null
+        ? Stack(
+            children: [
+              Image.asset(AppImages.gallery),
+              Transform.rotate(
+                angle:
+                    30 * (3.1415926535897932 / 180), // Поворот на 30 градусов
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(
+                    lastImage!,
+                    width: 40,
+                    height: 40,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ],
+          )
+        : const Placeholder();
   }
 }
