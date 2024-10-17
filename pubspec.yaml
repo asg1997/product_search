@@ -49,6 +49,7 @@ dependencies:
   photo_manager: ^3.5.0
   
   
+  
 
 
 dev_dependencies:
@@ -62,6 +63,15 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
   very_good_analysis: ^5.1.0
+  icons_launcher: ^3.0.0
+
+icons_launcher:
+  image_path: "assets/icons/logo.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -76,4 +86,5 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/icons/
     
