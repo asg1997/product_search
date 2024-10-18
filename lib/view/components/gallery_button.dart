@@ -48,23 +48,31 @@ class _GalleryButtonState extends State<GalleryButton> {
   @override
   Widget build(BuildContext context) {
     return lastImage != null
-        ? Stack(
-            children: [
-              Image.asset(AppImages.gallery),
-              Transform.rotate(
-                angle:
-                    30 * (3.1415926535897932 / 180), // Поворот на 30 градусов
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    lastImage!,
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.cover,
+        ? SizedBox(
+            height: 80,
+            width: 80,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset(AppImages.gallery),
+                Align(
+                  alignment: const Alignment(0.6, -0.4),
+                  child: Transform.rotate(
+                    angle: 20 *
+                        (3.1415926535897932 / 180), // Поворот на 30 градусов
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        lastImage!,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         : const Placeholder();
   }
