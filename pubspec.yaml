@@ -46,8 +46,10 @@ dependencies:
   flutter_portal: ^1.1.4
   camerax: ^0.1.2
   camera: ^0.11.0+2
-  photo_manager: ^3.5.0
+  photo_manager: ^3.5.1
   image_picker: ^1.1.2
+  sliding_up_panel: ^2.0.0+1
+  collection: ^1.18.0
   
   
   

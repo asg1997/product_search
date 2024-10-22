@@ -7,7 +7,10 @@ import 'package:product_search/core/widgets/loading_widget.dart';
 import 'package:product_search/core/widgets/main_app_bar.dart';
 import 'package:product_search/resources/resources.dart';
 import 'package:product_search/view/components/gallery_button.dart';
+import 'package:product_search/view/components/gallery_widget.dart';
 import 'package:product_search/view/search_filters_page.dart';
+
+final _galleryShownProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({super.key});
@@ -42,39 +45,91 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final galleryShown = ref.watch(_galleryShownProvider);
     return Scaffold(
-      body: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: (!initialized)
-                  ? const LoadingWidget()
-                  : Stack(
-                      children: [
-                        _CameraWidget(controller: controller!),
-                        const MainAppBarWidget(transparent: true),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Image.asset(AppImages.focus),
-                            const Gap(33),
-                            const _TipWidget(),
-                            const Gap(24),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 44),
-                              child: _FooterWidget(controller: controller!),
+      body: (!initialized)
+          ? const LoadingWidget()
+          : Stack(
+              children: [
+                _CameraWidget(controller: controller!),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const MainAppBarWidget(transparent: true),
+                      Expanded(
+                        flex: galleryShown ? 0 : 1,
+                        child: Container(),
+                      ),
+                      // ИНСТРУМЕНТЫ (галерея не видна)
+                      AnimatedSize(
+                        duration: Durations.medium1,
+                        child: AnimatedOpacity(
+                          duration: Durations.long1,
+                          opacity: galleryShown ? 0 : 1,
+                          child: SizedBox(
+                            height: galleryShown ? 0 : null,
+                            child: Column(
+                              children: [
+                                Image.asset(AppImages.focus),
+                                const Gap(33),
+                                const _TipWidget(),
+                                const Gap(24),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 44,
+                                  ),
+                                  child: _FooterWidget(controller: controller!),
+                                ),
+                                const Gap(24),
+                              ],
                             ),
-                            const Gap(24),
-                          ],
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+
+                      // ГАЛЕРЕЯ
+                      Expanded(
+                        flex: galleryShown ? 1 : 0,
+                        child: AnimatedSize(
+                          duration: Durations.medium1,
+                          child: AnimatedOpacity(
+                            duration: Durations.medium1,
+                            opacity: galleryShown ? 1 : 0,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final avaliableHeight = constraints.maxHeight;
+                                return SizedBox(
+                                  height: galleryShown ? avaliableHeight : 0,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Spacer(),
+                                      const _CameraButton(),
+                                      const Gap(14),
+                                      const _UseCameraText(),
+                                      const Spacer(flex: 2),
+                                      SizedBox(
+                                        height: galleryShown
+                                            ? avaliableHeight * .66
+,
+                                        child: const GalleryWidget(),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -121,13 +176,20 @@ class _FooterWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const GalleryButton(),
-        _SearchButton(controller: controller),
-        const _SettingsButton(),
-      ],
+    return SafeArea(
+      top: false,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GalleryButton(
+            onTap: () => ref
+                .read(_galleryShownProvider.notifier)
+                .update((state) => !state),
+          ),
+          _SearchButton(controller: controller),
+          const _SettingsButton(),
+        ],
+      ),
     );
   }
 }
@@ -142,7 +204,10 @@ class _SearchButton extends ConsumerWidget {
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          // TODO: При нажатии делается снимок
+          // и переход на экран с товарами
+        },
         child: Image.asset(AppImages.photo),
       ),
     );
@@ -162,6 +227,42 @@ class _SettingsButton extends ConsumerWidget {
         onTap: () => SearchFiltersPage.navigate(context),
         child: Image.asset(AppImages.settings),
       ),
+    );
+  }
+}
+
+class _CameraButton extends ConsumerWidget {
+  const _CameraButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () =>
+          ref.read(_galleryShownProvider.notifier).update((state) => false),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: const Color(0xFF0A2738).withOpacity(.5),
+        ),
+        width: 72,
+        height: 72,
+        child: const Icon(
+          Icons.camera_alt,
+          color: Color(0xFFFACB7E),
+        ),
+      ),
+    );
+  }
+}
+
+class _UseCameraText extends ConsumerWidget {
+  const _UseCameraText({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Text(
+      'Use camera to search',
+      style: AppFonts.extraBold16.copyWith(color: Colors.white),
     );
   }
 }

@@ -24,12 +24,8 @@ mixin _$FilterStores {
   String get id => throw _privateConstructorUsedError;
   bool get isSelected => throw _privateConstructorUsedError;
 
-  /// Serializes this FilterStores to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of FilterStores
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $FilterStoresCopyWith<FilterStores> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,8 +49,6 @@ class _$FilterStoresCopyWithImpl<$Res, $Val extends FilterStores>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of FilterStores
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,8 +92,6 @@ class __$$FilterStoresImplCopyWithImpl<$Res>
       _$FilterStoresImpl _value, $Res Function(_$FilterStoresImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of FilterStores
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -156,13 +148,11 @@ class _$FilterStoresImpl implements _FilterStores {
                 other.isSelected == isSelected));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, title, id, isSelected);
 
-  /// Create a copy of FilterStores
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$FilterStoresImplCopyWith<_$FilterStoresImpl> get copyWith =>
@@ -191,11 +181,8 @@ abstract class _FilterStores implements FilterStores {
   String get id;
   @override
   bool get isSelected;
-
-  /// Create a copy of FilterStores
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$FilterStoresImplCopyWith<_$FilterStoresImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
