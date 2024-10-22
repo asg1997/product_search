@@ -114,7 +114,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                                       SizedBox(
                                         height: galleryShown
                                             ? avaliableHeight * .66
-,
+                                            : 0,
                                         child: const GalleryWidget(),
                                       ),
                                     ],
