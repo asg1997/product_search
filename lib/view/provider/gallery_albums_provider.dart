@@ -5,6 +5,7 @@ final galleryAlbumsPathsProvider =
     FutureProvider<List<AssetPathEntity>>((ref) async {
   final permission = await PhotoManager.requestPermissionExtend();
   if (!permission.isAuth) return [];
+
   final albums = await PhotoManager.getAssetPathList(
     type: RequestType.image,
   );

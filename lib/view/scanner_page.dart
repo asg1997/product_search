@@ -115,7 +115,11 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                                         height: galleryShown
                                             ? avaliableHeight * .66
                                             : 0,
-                                        child: const GalleryWidget(),
+                                        child: GalleryWidget(
+                                          onImageSelected: (image) {
+                                            // TODO: отправить запрос
+                                          },
+                                        ),
                                       ),
                                     ],
                                   ),
