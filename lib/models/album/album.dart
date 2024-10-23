@@ -7,6 +7,6 @@ part 'album.freezed.dart';
 class PagginatedAlbum with _$PagginatedAlbum {
   const factory PagginatedAlbum({
     required AssetPathEntity path,
-    required int page,
+    required int countPerPage,
   }) = _PagginatedAlbum;
 }

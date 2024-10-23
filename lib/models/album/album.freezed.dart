@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PagginatedAlbum {
   AssetPathEntity get path => throw _privateConstructorUsedError;
-  int get page => throw _privateConstructorUsedError;
+  int get countPerPage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PagginatedAlbumCopyWith<PagginatedAlbum> get copyWith =>
@@ -30,7 +30,7 @@ abstract class $PagginatedAlbumCopyWith<$Res> {
           PagginatedAlbum value, $Res Function(PagginatedAlbum) then) =
       _$PagginatedAlbumCopyWithImpl<$Res, PagginatedAlbum>;
   @useResult
-  $Res call({AssetPathEntity path, int page});
+  $Res call({AssetPathEntity path, int countPerPage});
 }
 
 /// @nodoc
@@ -47,16 +47,16 @@ class _$PagginatedAlbumCopyWithImpl<$Res, $Val extends PagginatedAlbum>
   @override
   $Res call({
     Object? path = null,
-    Object? page = null,
+    Object? countPerPage = null,
   }) {
     return _then(_value.copyWith(
       path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
               as AssetPathEntity,
-      page: null == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
+      countPerPage: null == countPerPage
+          ? _value.countPerPage
+          : countPerPage // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -70,7 +70,7 @@ abstract class _$$PagginatedAlbumImplCopyWith<$Res>
       __$$PagginatedAlbumImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({AssetPathEntity path, int page});
+  $Res call({AssetPathEntity path, int countPerPage});
 }
 
 /// @nodoc
@@ -85,16 +85,16 @@ class __$$PagginatedAlbumImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? path = null,
-    Object? page = null,
+    Object? countPerPage = null,
   }) {
     return _then(_$PagginatedAlbumImpl(
       path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
               as AssetPathEntity,
-      page: null == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
+      countPerPage: null == countPerPage
+          ? _value.countPerPage
+          : countPerPage // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -103,16 +103,16 @@ class __$$PagginatedAlbumImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$PagginatedAlbumImpl implements _PagginatedAlbum {
-  const _$PagginatedAlbumImpl({required this.path, required this.page});
+  const _$PagginatedAlbumImpl({required this.path, required this.countPerPage});
 
   @override
   final AssetPathEntity path;
   @override
-  final int page;
+  final int countPerPage;
 
   @override
   String toString() {
-    return 'PagginatedAlbum(path: $path, page: $page)';
+    return 'PagginatedAlbum(path: $path, countPerPage: $countPerPage)';
   }
 
   @override
@@ -121,11 +121,12 @@ class _$PagginatedAlbumImpl implements _PagginatedAlbum {
         (other.runtimeType == runtimeType &&
             other is _$PagginatedAlbumImpl &&
             (identical(other.path, path) || other.path == path) &&
-            (identical(other.page, page) || other.page == page));
+            (identical(other.countPerPage, countPerPage) ||
+                other.countPerPage == countPerPage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, path, page);
+  int get hashCode => Object.hash(runtimeType, path, countPerPage);
 
   @JsonKey(ignore: true)
   @override
@@ -138,12 +139,12 @@ class _$PagginatedAlbumImpl implements _PagginatedAlbum {
 abstract class _PagginatedAlbum implements PagginatedAlbum {
   const factory _PagginatedAlbum(
       {required final AssetPathEntity path,
-      required final int page}) = _$PagginatedAlbumImpl;
+      required final int countPerPage}) = _$PagginatedAlbumImpl;
 
   @override
   AssetPathEntity get path;
   @override
-  int get page;
+  int get countPerPage;
   @override
   @JsonKey(ignore: true)
   _$$PagginatedAlbumImplCopyWith<_$PagginatedAlbumImpl> get copyWith =>

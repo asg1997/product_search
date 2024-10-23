@@ -7,6 +7,8 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/core/utils/consts/app_fonts.dart';
 import 'package:product_search/models/album/album.dart';
+import 'package:product_search/view/all_album_images_page.dart';
+import 'package:product_search/view/components/album_image_thumbnail.dart';
 import 'package:product_search/view/provider/gallery_album_thumbnails_provider.dart';
 import 'package:product_search/view/provider/gallery_albums_provider.dart';
 
@@ -51,9 +53,15 @@ class AlbumWidget extends ConsumerWidget {
   final void Function(Uint8List image) onImageSelected;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pagginatedAlbum = PagginatedAlbum(path: albumPath, page: 1);
+    final pagginatedAlbum = PagginatedAlbum(
+      path: albumPath,
+      countPerPage: 9,
+    );
     final files =
-        ref.watch(galleryAlbumThumbnaimsProvider(pagginatedAlbum)).value ?? [];
+        ref.watch(galleryAlbumThumbnailsProvider(pagginatedAlbum)).whenOrNull(
+                  data: (items) => items,
+                ) ??
+            [];
     if (files.isEmpty) return Container();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -63,29 +71,36 @@ class AlbumWidget extends ConsumerWidget {
         children: [
           SizedBox(
             height: 50,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    pagginatedAlbum.path.name,
-                    style: AppFonts.extraBold16.copyWith(
-                      color: AppColors.mainBlack,
-                      height: 1,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: files.length > 8
+                  ? () async {
+                      final selectedImage = await AllAlbumImagesPage.navigate(
+                        context,
+                        albumPath: albumPath,
+                      );
+                      if (selectedImage != null) onImageSelected(selectedImage);
+                    }
+                  : null,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      pagginatedAlbum.path.name,
+                      style: AppFonts.extraBold16.copyWith(
+                        color: AppColors.mainBlack,
+                        height: 1,
+                      ),
                     ),
                   ),
-                ),
-                if (files.length > 8)
-                  TextButton(
-                    // TODO: Перейти на страницу со всеми фотографиями
-                    onPressed: () {},
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    child: Text(
+                  if (files.length > 8)
+                    Text(
                       'Show all',
                       style: AppFonts.medium14
                           .copyWith(color: const Color(0xFF5F6B71)),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
           const Gap(6),
@@ -101,7 +116,7 @@ class AlbumWidget extends ConsumerWidget {
             itemCount: files.length > 8 ? 8 : files.length,
             itemBuilder: (_, index) {
               final item = files[index];
-              return _AlbumImage(
+              return AlbumImageThumbnail(
                 image: item,
                 onTap: () => onImageSelected(item),
               );
@@ -109,37 +124,6 @@ class AlbumWidget extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _AlbumImage extends ConsumerWidget {
-  const _AlbumImage({
-    required this.image,
-    required this.onTap,
-  });
-  final Uint8List image;
-  final VoidCallback onTap;
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Stack(
-      children: [
-        SizedBox.expand(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.memory(
-              image,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-          ),
-        ),
-      ],
     );
   }
 }
