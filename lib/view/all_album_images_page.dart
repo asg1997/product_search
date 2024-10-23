@@ -11,36 +11,6 @@ import 'package:product_search/models/album/album.dart';
 import 'package:product_search/view/components/album_image_thumbnail.dart';
 import 'package:product_search/view/provider/gallery_album_thumbnails_provider.dart';
 
-// final _pageProvider = StateProvider.autoDispose<int>((ref) => 1);
-// final _totalThumbnailsProvider = StreamProvider.autoDispose
-//     .family<List<Uint8List>, PagginatedAlbum>((ref, album) async* {
-//   final images = <Uint8List>[];
-
-//   final controller = StreamController<List<Uint8List>>();
-
-//   // Listen to the galleryAlbumThumbnaimsProvider and update images list
-//   final subscription = ref.listen<AsyncValue<List<Uint8List>>>(
-//     galleryAlbumThumbnaimsProvider(album),
-//     (previous, next) {
-//       next.whenData((newImages) {
-//         images.addAll(newImages);
-//         controller.add(images); // Push the updated images list to the stream
-//       });
-//     },
-//   );
-
-//   // Yield the initial empty list
-//   yield images;
-
-//   // Continuously yield updated images from the StreamController
-//   await for (final updatedImages in controller.stream) {
-//     yield updatedImages;
-//   }
-
-//   // Close the StreamController when no longer needed
-//   await controller.close();
-// });
-
 class AllAlbumImagesPage extends ConsumerWidget {
   const AllAlbumImagesPage({required this.albumPath, super.key});
   final AssetPathEntity albumPath;

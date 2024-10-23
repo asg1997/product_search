@@ -30,6 +30,7 @@ class GalleryWidget extends ConsumerWidget {
               itemCount: albums.length,
               itemBuilder: (_, index) {
                 final albumPath = albums[index];
+
                 return AlbumWidget(
                   albumPath: albumPath,
                   onImageSelected: onImageSelected,
@@ -57,6 +58,7 @@ class AlbumWidget extends ConsumerWidget {
       path: albumPath,
       countPerPage: 9,
     );
+
     final files =
         ref.watch(galleryAlbumThumbnailsProvider(pagginatedAlbum)).whenOrNull(
                   data: (items) => items,

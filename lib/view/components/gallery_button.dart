@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:product_search/resources/resources.dart';
 import 'package:product_search/view/provider/gallery_albums_provider.dart';
 
-final lastGalleryImageProvider = FutureProvider<File?>((ref) async {
+final lastGalleryImageProvider = FutureProvider.autoDispose<File?>((ref) async {
   final file = await ref.watch(galleryAlbumsPathsProvider).whenOrNull(
     data: (paths) async {
       if (paths.isEmpty) return null;

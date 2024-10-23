@@ -6,19 +6,18 @@ import 'package:product_search/core/utils/pagination_controller/pagination_contr
 import 'package:product_search/core/utils/pagination_controller/pagination_state/pagination_state.dart';
 import 'package:product_search/models/album/album.dart';
 
-// final galleryAlbumThumbnaimsProvider =
-//     FutureProvider.family<List<Uint8List>, PagginatedAlbum>(
-final galleryAlbumThumbnailsProvider = StateNotifierProvider.family<
+final galleryAlbumThumbnailsProvider = StateNotifierProvider.family.autoDispose<
     PaginationController<Uint8List>,
     PaginationState<Uint8List>,
     PagginatedAlbum>((ref, album) {
   return PaginationController(
     itemsPerBatch: album.countPerPage,
     initialPage: 1,
-    fetchNextItems: (_, __, page) async {
-      final images = await album.path.getAssetListPaged(
-        page: page,
-        size: album.countPerPage,
+    fetchNextItems: (_, offset, page) async {
+      final images = await album.path.getAssetListRange(
+        start: offset, end: offset + album.countPerPage,
+        // page: page,
+        // size: album.countPerPage,
       );
 
       final files = <Uint8List>[];

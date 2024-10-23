@@ -46,6 +46,7 @@ class PaginationController<T> extends StateNotifier<PaginationState<T>> {
   }
 
   void _updateData(List<T> result) {
+    if (!mounted) return;
     _noMoreItems = result.length < _itemsPerBatch;
     _page += 1;
     if (result.isNotEmpty) {
