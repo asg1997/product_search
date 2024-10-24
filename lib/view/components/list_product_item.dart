@@ -3,9 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/core/utils/consts/app_decoration.dart';
+import 'package:product_search/core/utils/consts/app_fonts.dart';
+import 'package:product_search/core/widgets/price_widget.dart';
 import 'package:product_search/models/product/product.dart';
 import 'package:product_search/resources/resources.dart';
+import 'package:product_search/view/components/store_logo.dart';
 
 class ListProductItem extends ConsumerWidget {
   const ListProductItem({required this.product, super.key});
@@ -16,8 +20,9 @@ class ListProductItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return LayoutBuilder(
       builder: (_, c) {
-        final tablet = c.maxWidth < AppDecoration.tabletBreakpoint;
+        final tablet = c.maxWidth >= AppDecoration.tabletBreakpoint;
         return Container(
+          padding: EdgeInsets.only(right: tablet ? 47 : 22),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: AppDecoration.borderRadius,
@@ -29,16 +34,31 @@ class ListProductItem extends ConsumerWidget {
               Expanded(
                 child: Column(
                   children: [
-                    // Row(
-                    //   children: [
-                    //     PriceWidget(price: product.price),
-                    //     Expanded(child: StoreLogo(product: product)),
-                    //   ],
-                    // ),
-                    // _ProductName(product: product),
+                    if (!tablet) ...[
+                      Row(
+                        children: [
+                          PriceWidget(price: product.price),
+                          Gap(8),
+                          Expanded(child: StoreLogo(product: product)),
+                        ],
+                      ),
+                      Gap(16),
+                    ],
+                    _ProductName(product: product),
                   ],
                 ),
               ),
+              if (tablet) ...[
+                Gap(24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PriceWidget(price: product.price),
+                    Gap(10),
+                    StoreLogo(product: product),
+                  ],
+                ),
+              ],
             ],
           ),
         );
@@ -58,11 +78,12 @@ class _ProductName extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (_, c) {
-        final tablet = c.maxWidth < AppDecoration.tabletBreakpoint;
+        final tablet = c.maxWidth >= AppDecoration.tabletBreakpoint;
         return Text(
           product.name,
           maxLines: tablet ? 3 : 2,
           overflow: TextOverflow.ellipsis,
+          style: AppFonts.medium14.copyWith(color: AppColors.mainDarkGray),
         );
       },
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:product_search/core/utils/consts/app_colors.dart';
+import 'package:product_search/core/utils/consts/app_fonts.dart';
 import 'package:product_search/models/product/product.dart';
 
 class StoreLogo extends StatelessWidget {
@@ -13,6 +15,7 @@ class StoreLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
@@ -24,7 +27,12 @@ class StoreLogo extends StatelessWidget {
           ),
         ),
         const Gap(6),
-        Expanded(child: Text(product.storeName)),
+        Text(
+          product.storeName,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppFonts.medium12.copyWith(color: AppColors.mainDarkGray),
+        ),
       ],
     );
   }
