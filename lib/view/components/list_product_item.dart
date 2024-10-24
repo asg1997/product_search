@@ -114,7 +114,7 @@ class _Image extends ConsumerWidget {
               // иконка поиск похожих
               Positioned(
                 top: 12,
-                right: 12,
+                left: 12,
                 child: GestureDetector(
                   onTap: () {},
                   child: Image.asset(AppImages.search),
