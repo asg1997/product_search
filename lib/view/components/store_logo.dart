@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/core/utils/consts/app_fonts.dart';
@@ -27,11 +28,13 @@ class StoreLogo extends StatelessWidget {
           ),
         ),
         const Gap(6),
-        Text(
-          product.storeName,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: AppFonts.medium12.copyWith(color: AppColors.mainDarkGray),
+        Expanded(
+          child: Text(
+            product.storeName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppFonts.medium12.copyWith(color: AppColors.mainDarkGray),
+          ),
         ),
       ],
     );

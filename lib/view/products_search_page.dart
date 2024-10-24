@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:product_search/core/utils/consts/app_colors.dart';
+import 'package:product_search/core/utils/extensions.dart';
 import 'package:product_search/core/widgets/logo_widget.dart';
 import 'package:product_search/models/product/product.dart';
-import 'package:product_search/view/components/list_product_item.dart';
+import 'package:product_search/view/components/grid_product_item.dart';
 
 class ProductsSearchPage extends ConsumerWidget {
   const ProductsSearchPage({required this.image, super.key});
@@ -54,10 +54,32 @@ class ProductsSearchPage extends ConsumerWidget {
 
           SliverPadding(
             padding: const EdgeInsets.all(12),
-            sliver: SliverList.separated(
-              separatorBuilder: (_, __) => const Gap(8),
+            // sliver: SliverList.separated(
+            //   separatorBuilder: (_, __) => const Gap(8),
+            //   itemBuilder: (_, index) {
+            //     return const ListProductItem(
+            //       product: Product(
+            //         image:
+            //             'https://jureursicphotography.com/wp-content/uploads/2020/10/2020_02_21_Sephora-Favurite-Box5247.jpg',
+            //         price: r'34$',
+            //         name:
+            //             'Laborum nisi aute cupidatat consectetur ea cupidatat amet sunt reprehenderit sunt et.',
+            //         storeName: 'Alibaba',
+            //         storeLogo:
+            //             'https://www.brandcolorcode.com/images/color-palette/head-shoulders.png',
+            //       ),
+            //     );
+            //   },
+            // ),
+            sliver: SliverGrid.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: context.isTablet ? 216 / 330 : 172 / 250,
+              ),
               itemBuilder: (_, index) {
-                return const ListProductItem(
+                return const GridProductItem(
                   product: Product(
                     image:
                         'https://jureursicphotography.com/wp-content/uploads/2020/10/2020_02_21_Sephora-Favurite-Box5247.jpg',
@@ -71,27 +93,6 @@ class ProductsSearchPage extends ConsumerWidget {
                 );
               },
             ),
-            // sliver: SliverGrid.builder(
-            //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //     crossAxisCount: 1,
-            //     crossAxisSpacing: 8,
-            //     mainAxisSpacing: 8,
-            //   ),
-            //   itemBuilder: (_, index) {
-            //     return const ListProductItem(
-            //       product: Product(
-            //         image:
-            //             'https://jureursicphotography.com/wp-content/uploads/2020/10/2020_02_21_Sephora-Favurite-Box5247.jpg',
-            //         price: r'34$',
-            //         description:
-            //             'Laborum nisi aute cupidatat consectetur ea cupidatat amet sunt reprehenderit sunt et.',
-            //         nameStore: 'Alibaba',
-            //         imageStore:
-            //             'https://www.brandcolorcode.com/images/color-palette/head-shoulders.png',
-            //       ),
-            //     );
-            //   },
-            // ),
           ),
           // ref.watch(searchProductsProvider).when(
           //       data: (products) => ColoredBox(
