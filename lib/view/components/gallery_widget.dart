@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,14 +7,14 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/core/utils/consts/app_fonts.dart';
 import 'package:product_search/models/pagginated_album/pagginated_album.dart';
-import 'package:product_search/view/all_album_images_page.dart';
 import 'package:product_search/view/components/album_image_thumbnail.dart';
 import 'package:product_search/view/provider/gallery_album_thumbnails_provider.dart';
 import 'package:product_search/view/provider/gallery_albums_provider.dart';
+import 'package:product_search/view/provider/pick_image_from_gallery_provider.dart';
 
 class GalleryWidget extends ConsumerWidget {
   const GalleryWidget({required this.onImageSelected, super.key});
-  final void Function(Uint8List image) onImageSelected;
+  final void Function(File image) onImageSelected;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final albums = ref.watch(galleryAlbumsPathsProvider).value ?? [];
@@ -51,7 +51,7 @@ class AlbumWidget extends ConsumerWidget {
     super.key,
   });
   final AssetPathEntity albumPath;
-  final void Function(Uint8List image) onImageSelected;
+  final void Function(File image) onImageSelected;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pagginatedAlbum = PagginatedAlbum(
@@ -77,10 +77,8 @@ class AlbumWidget extends ConsumerWidget {
               behavior: HitTestBehavior.opaque,
               onTap: files.length > 8
                   ? () async {
-                      final selectedImage = await AllAlbumImagesPage.navigate(
-                        context,
-                        albumPath: albumPath,
-                      );
+                      final selectedImage =
+                          await ref.read(pickeImageFromGalleryProvider.future);
                       if (selectedImage != null) onImageSelected(selectedImage);
                     }
                   : null,
@@ -118,9 +116,13 @@ class AlbumWidget extends ConsumerWidget {
             itemCount: files.length > 8 ? 8 : files.length,
             itemBuilder: (_, index) {
               final item = files[index];
+
               return AlbumImageThumbnail(
                 image: item,
-                onTap: () => onImageSelected(item),
+                onTap: () {
+                  final file = File.fromRawPath(item);
+                  onImageSelected(file);
+                },
               );
             },
           ),

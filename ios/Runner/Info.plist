@@ -30,8 +30,6 @@
 	<string>The app uses the camera for scanning and searching items</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app needs access to gallery to pick images for searching</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>The app uses this feature when using the camera</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
