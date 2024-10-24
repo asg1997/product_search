@@ -31,29 +31,32 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   google_fonts: ^6.2.1
+  
   flutter_riverpod: ^2.5.3
-  spider: ^4.2.2
+  
   gap: ^3.0.1
+
   freezed_annotation: ^2.4.4
   freezed: ^2.5.2
-  build_runner: ^2.4.9
-  json_serializable: ^6.8.0
-  flutter_portal: ^1.1.4
-  camerax: ^0.1.2
-  camera: ^0.11.0+2
-  photo_manager: ^3.5.1
-  image_picker: ^1.1.2
-  sliding_up_panel: ^2.0.0+1
-  collection: ^1.18.0
-  
-  
-  
 
+  build_runner: ^2.4.9
+  json_annotation: ^4.9.0
+  
+  flutter_portal: ^1.1.4
+
+  camera: ^0.11.0+2
+
+  photo_manager: ^3.5.1
+
+  collection: ^1.18.0
+
+  dio: ^5.7.0
+
+  shared_preferences: ^2.2.3
+  graphql_flutter: ^5.1.2
+  
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +70,8 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   very_good_analysis: ^5.1.0
   icons_launcher: ^3.0.0
+  json_serializable: ^6.8.0
+  spider: ^4.2.2
 
 icons_launcher:
   image_path: "assets/icons/logotip.png"

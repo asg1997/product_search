@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:product_search/core/utils/pagination_controller/pagination_controller.dart';
 import 'package:product_search/core/utils/pagination_controller/pagination_state/pagination_state.dart';
-import 'package:product_search/models/album/album.dart';
+import 'package:product_search/models/pagginated_album/pagginated_album.dart';
 
 final galleryAlbumThumbnailsProvider = StateNotifierProvider.family.autoDispose<
     PaginationController<Uint8List>,

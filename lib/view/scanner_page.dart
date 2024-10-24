@@ -14,7 +14,12 @@ final _galleryShownProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({super.key});
-
+  static void navigate(BuildContext context) => Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => const ScannerPage(),
+        ),
+      );
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ScannerPageState();
 }

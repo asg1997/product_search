@@ -7,7 +7,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/core/utils/consts/app_fonts.dart';
 import 'package:product_search/core/widgets/loading_widget.dart';
-import 'package:product_search/models/album/album.dart';
+import 'package:product_search/models/pagginated_album/pagginated_album.dart';
 import 'package:product_search/view/components/album_image_thumbnail.dart';
 import 'package:product_search/view/provider/gallery_album_thumbnails_provider.dart';
 

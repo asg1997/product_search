@@ -6,6 +6,7 @@ part 'product.g.dart';
 typedef ProductId = String;
 typedef Products = List<Product>;
 
+/// Найденый товар
 @freezed
 class Product with _$Product {
   const factory Product({
