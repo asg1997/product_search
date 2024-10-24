@@ -10,13 +10,13 @@ import 'package:product_search/view/components/stores_grid_view.dart';
 import 'package:product_search/view/controllers/selected_stores_controller.dart';
 import 'package:product_search/view/provider/selected_stores_provider.dart';
 
-class SearchFiltersPage extends ConsumerWidget {
-  const SearchFiltersPage({super.key});
+class SettingsPage extends ConsumerWidget {
+  const SettingsPage({super.key});
 
   static void navigate(BuildContext context) => Navigator.push(
         context,
         MaterialPageRoute<void>(
-          builder: (context) => const SearchFiltersPage(),
+          builder: (context) => const SettingsPage(),
         ),
       );
 

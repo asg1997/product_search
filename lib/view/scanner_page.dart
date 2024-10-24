@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,9 +10,12 @@ import 'package:product_search/core/widgets/main_app_bar.dart';
 import 'package:product_search/resources/resources.dart';
 import 'package:product_search/view/components/gallery_button.dart';
 import 'package:product_search/view/components/gallery_widget.dart';
-import 'package:product_search/view/search_filters_page.dart';
+import 'package:product_search/view/products_search_page.dart';
+import 'package:product_search/view/settings_page.dart';
 
 final _galleryShownProvider = StateProvider.autoDispose<bool>((ref) => false);
+
+final _selectedImageProvider = StateProvider.autoDispose<File?>((ref) => null);
 
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({super.key});
@@ -50,6 +55,11 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(_selectedImageProvider, (_, image) {
+      if (image == null) return;
+      ProductsSearchPage.navigate(context, image: image);
+    });
+
     final galleryShown = ref.watch(_galleryShownProvider);
     return Scaffold(
       body: (!initialized)
@@ -122,7 +132,12 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                                             : 0,
                                         child: GalleryWidget(
                                           onImageSelected: (image) {
-                                            // TODO: отправить запрос
+                                            ref
+                                                .read(
+                                                  _selectedImageProvider
+                                                      .notifier,
+                                                )
+                                                .state = image;
                                           },
                                         ),
                                       ),
@@ -213,9 +228,14 @@ class _SearchButton extends ConsumerWidget {
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          // TODO: При нажатии делается снимок
-          // и переход на экран с товарами
+        onTap: () async {
+          final xFile = await controller.takePicture();
+          final image = File(xFile.path);
+          ref
+              .read(
+                _selectedImageProvider.notifier,
+              )
+              .state = image;
         },
         child: Image.asset(AppImages.photo),
       ),
@@ -233,7 +253,7 @@ class _SettingsButton extends ConsumerWidget {
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => SearchFiltersPage.navigate(context),
+        onTap: () => SettingsPage.navigate(context),
         child: Image.asset(AppImages.settings),
       ),
     );
