@@ -20,58 +20,58 @@ class _ProductSearcherImpl implements ProductsSearcher {
       const Product(
         image: AppImages.image,
         price: '520.23',
-        description:
+        name:
             'Electric Heated Pad Had Warmer Bag Heating for Outdoor Camping Glo...',
-        nameStore: 'alibaba',
-        imageStore: AppImages.alibaba,
+        storeName: 'alibaba',
+        storeLogo: AppImages.alibaba,
       ),
       const Product(
         image: AppImages.image,
         price: '520.23',
-        description:
+        name:
             'Electric Heated Pad Had Warmer Bag Heating for Outdoor Camping Glo...',
-        nameStore: 'alibaba',
-        imageStore: AppImages.alibaba,
+        storeName: 'alibaba',
+        storeLogo: AppImages.alibaba,
       ),
       const Product(
         image: AppImages.image,
         price: '520.23',
-        description:
+        name:
             'Electric Heated Pad Had Warmer Bag Heating for Outdoor Camping Glo...',
-        nameStore: 'alibaba',
-        imageStore: AppImages.alibaba,
+        storeName: 'alibaba',
+        storeLogo: AppImages.alibaba,
       ),
       const Product(
         image: AppImages.image,
         price: '520.23',
-        description:
+        name:
             'Electric Heated Pad Had Warmer Bag Heating for Outdoor Camping Glo...',
-        nameStore: 'alibaba',
-        imageStore: AppImages.alibaba,
+        storeName: 'alibaba',
+        storeLogo: AppImages.alibaba,
       ),
       const Product(
         image: AppImages.image,
         price: '520.23',
-        description:
+        name:
             'Electric Heated Pad Had Warmer Bag Heating for Outdoor Camping Glo...',
-        nameStore: 'alibaba',
-        imageStore: AppImages.alibaba,
+        storeName: 'alibaba',
+        storeLogo: AppImages.alibaba,
       ),
       const Product(
         image: AppImages.image,
         price: '520.23',
-        description:
+        name:
             'Electric Heated Pad Had Warmer Bag Heating for Outdoor Camping Glo...',
-        nameStore: 'alibaba',
-        imageStore: AppImages.alibaba,
+        storeName: 'alibaba',
+        storeLogo: AppImages.alibaba,
       ),
       const Product(
         image: AppImages.image,
         price: '520.23',
-        description:
+        name:
             'Electric Heated Pad Had Warmer Bag Heating for Outdoor Camping Glo...',
-        nameStore: 'alibaba',
-        imageStore: AppImages.alibaba,
+        storeName: 'alibaba',
+        storeLogo: AppImages.alibaba,
       ),
     ];
   }

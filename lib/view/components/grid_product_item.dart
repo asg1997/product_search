@@ -6,38 +6,8 @@ import 'package:product_search/core/widgets/price_widget.dart';
 import 'package:product_search/models/product/product.dart';
 import 'package:product_search/resources/resources.dart';
 
-class ProductGridView extends ConsumerWidget {
-  const ProductGridView({
-    required this.products,
-    super.key,
-  });
-
-  final Products products;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return LayoutBuilder(
-      builder: (_, p) {
-        return GridView.builder(
-          padding: AppDecoration.padding12.copyWith(top: 12, bottom: 30),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: p.maxWidth > 500 ? 3 : 2,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-            childAspectRatio: p.maxWidth > 500 ? 216 / 330 : 172 / 250,
-          ),
-          itemCount: products.length,
-          itemBuilder: (_, int index) => _ProductItem(
-            product: products[index],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _ProductItem extends ConsumerWidget {
-  const _ProductItem({required this.product, super.key});
+class GridProductItem extends ConsumerWidget {
+  const GridProductItem({required this.product, super.key});
 
   final Product product;
 
@@ -54,7 +24,7 @@ class _ProductItem extends ConsumerWidget {
             children: [
               Column(
                 children: [
-                  // картинка товара
+                  // КАРТИНКА ТОВАРА
                   ClipRRect(
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(16),
@@ -62,7 +32,7 @@ class _ProductItem extends ConsumerWidget {
                     ),
                     child: Stack(
                       children: [
-                        Image.asset(
+                        Image.network(
                           product.image,
                           fit: BoxFit.cover,
                           width: double.infinity,
@@ -87,21 +57,28 @@ class _ProductItem extends ConsumerWidget {
                       children: [
                         // название товара
                         Text(
-                          product.description,
+                          product.name,
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const Gap(4),
 
-                        // картинка магазина с названием
                         Row(
                           children: [
-                            // картинка магазина
-                            Image.asset(product.imageStore),
+                            // ЛОГО МАГАЗИНА
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                product.storeLogo,
+                                width: 24,
+                                height: 24,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                             const Gap(6),
 
                             // название магазина
-                            Text(product.nameStore),
+                            Expanded(child: Text(product.storeName)),
                           ],
                         ),
                       ],

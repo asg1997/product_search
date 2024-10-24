@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:product_search/core/utils/consts/app_colors.dart';
-import 'package:product_search/core/utils/consts/app_fonts.dart';
+import 'package:product_search/core/widgets/logo_widget.dart';
 
 class MainAppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
   const MainAppBarWidget({
@@ -22,22 +21,7 @@ class MainAppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
       elevation: 0,
 
       // НАЗВАНИЕ
-      title: RichText(
-        text: TextSpan(
-          children: <TextSpan>[
-            TextSpan(
-              text: 'Product',
-              style: AppFonts.linksButtonSmall
-                  .copyWith(color: AppColors.mainBlack),
-            ),
-            TextSpan(
-              text: ' Search',
-              style: AppFonts.linksButtonSmall
-                  .copyWith(color: AppColors.mainYellow1),
-            ),
-          ],
-        ),
-      ),
+      title: const LogoWidget(),
     );
   }
 }

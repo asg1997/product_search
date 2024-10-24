@@ -11,6 +11,7 @@ import 'package:product_search/resources/resources.dart';
 import 'package:product_search/view/components/gallery_button.dart';
 import 'package:product_search/view/components/gallery_widget.dart';
 import 'package:product_search/view/products_search_page.dart';
+import 'package:product_search/view/provider/save_file_to_temporary_provider.dart';
 import 'package:product_search/view/settings_page.dart';
 
 final _galleryShownProvider = StateProvider.autoDispose<bool>((ref) => false);
@@ -131,13 +132,18 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                                             ? avaliableHeight * .66
                                             : 0,
                                         child: GalleryWidget(
-                                          onImageSelected: (image) {
+                                          onImageSelected: (image) async {
+                                            final file = await ref.read(
+                                              saveFileToTemporaryProvider(
+                                                image,
+                                              ).future,
+                                            );
                                             ref
                                                 .read(
                                                   _selectedImageProvider
                                                       .notifier,
                                                 )
-                                                .state = image;
+                                                .state = file;
                                           },
                                         ),
                                       ),

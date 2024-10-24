@@ -8,18 +8,18 @@ part of 'product.dart';
 
 _$ProductImpl _$$ProductImplFromJson(Map<String, dynamic> json) =>
     _$ProductImpl(
+      name: json['name'] as String,
       image: json['image'] as String,
       price: json['price'] as String,
-      description: json['description'] as String,
-      nameStore: json['nameStore'] as String,
-      imageStore: json['imageStore'] as String,
+      storeName: json['storeName'] as String,
+      storeLogo: json['storeLogo'] as String,
     );
 
 Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
     <String, dynamic>{
+      'name': instance.name,
       'image': instance.image,
       'price': instance.price,
-      'description': instance.description,
-      'nameStore': instance.nameStore,
-      'imageStore': instance.imageStore,
+      'storeName': instance.storeName,
+      'storeLogo': instance.storeLogo,
     };

@@ -20,11 +20,11 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Product {
+  String get name => throw _privateConstructorUsedError;
   String get image => throw _privateConstructorUsedError;
   String get price => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
-  String get nameStore => throw _privateConstructorUsedError;
-  String get imageStore => throw _privateConstructorUsedError;
+  String get storeName => throw _privateConstructorUsedError;
+  String get storeLogo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,11 +37,11 @@ abstract class $ProductCopyWith<$Res> {
       _$ProductCopyWithImpl<$Res, Product>;
   @useResult
   $Res call(
-      {String image,
+      {String name,
+      String image,
       String price,
-      String description,
-      String nameStore,
-      String imageStore});
+      String storeName,
+      String storeLogo});
 }
 
 /// @nodoc
@@ -57,13 +57,17 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? name = null,
     Object? image = null,
     Object? price = null,
-    Object? description = null,
-    Object? nameStore = null,
-    Object? imageStore = null,
+    Object? storeName = null,
+    Object? storeLogo = null,
   }) {
     return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       image: null == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
@@ -72,17 +76,13 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
+      storeName: null == storeName
+          ? _value.storeName
+          : storeName // ignore: cast_nullable_to_non_nullable
               as String,
-      nameStore: null == nameStore
-          ? _value.nameStore
-          : nameStore // ignore: cast_nullable_to_non_nullable
-              as String,
-      imageStore: null == imageStore
-          ? _value.imageStore
-          : imageStore // ignore: cast_nullable_to_non_nullable
+      storeLogo: null == storeLogo
+          ? _value.storeLogo
+          : storeLogo // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -96,11 +96,11 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String image,
+      {String name,
+      String image,
       String price,
-      String description,
-      String nameStore,
-      String imageStore});
+      String storeName,
+      String storeLogo});
 }
 
 /// @nodoc
@@ -114,13 +114,17 @@ class __$$ProductImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? name = null,
     Object? image = null,
     Object? price = null,
-    Object? description = null,
-    Object? nameStore = null,
-    Object? imageStore = null,
+    Object? storeName = null,
+    Object? storeLogo = null,
   }) {
     return _then(_$ProductImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       image: null == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
@@ -129,17 +133,13 @@ class __$$ProductImplCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
+      storeName: null == storeName
+          ? _value.storeName
+          : storeName // ignore: cast_nullable_to_non_nullable
               as String,
-      nameStore: null == nameStore
-          ? _value.nameStore
-          : nameStore // ignore: cast_nullable_to_non_nullable
-              as String,
-      imageStore: null == imageStore
-          ? _value.imageStore
-          : imageStore // ignore: cast_nullable_to_non_nullable
+      storeLogo: null == storeLogo
+          ? _value.storeLogo
+          : storeLogo // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -149,29 +149,29 @@ class __$$ProductImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProductImpl implements _Product {
   const _$ProductImpl(
-      {required this.image,
+      {required this.name,
+      required this.image,
       required this.price,
-      required this.description,
-      required this.nameStore,
-      required this.imageStore});
+      required this.storeName,
+      required this.storeLogo});
 
   factory _$ProductImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductImplFromJson(json);
 
   @override
+  final String name;
+  @override
   final String image;
   @override
   final String price;
   @override
-  final String description;
+  final String storeName;
   @override
-  final String nameStore;
-  @override
-  final String imageStore;
+  final String storeLogo;
 
   @override
   String toString() {
-    return 'Product(image: $image, price: $price, description: $description, nameStore: $nameStore, imageStore: $imageStore)';
+    return 'Product(name: $name, image: $image, price: $price, storeName: $storeName, storeLogo: $storeLogo)';
   }
 
   @override
@@ -179,20 +179,19 @@ class _$ProductImpl implements _Product {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProductImpl &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.image, image) || other.image == image) &&
             (identical(other.price, price) || other.price == price) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
-            (identical(other.nameStore, nameStore) ||
-                other.nameStore == nameStore) &&
-            (identical(other.imageStore, imageStore) ||
-                other.imageStore == imageStore));
+            (identical(other.storeName, storeName) ||
+                other.storeName == storeName) &&
+            (identical(other.storeLogo, storeLogo) ||
+                other.storeLogo == storeLogo));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, image, price, description, nameStore, imageStore);
+  int get hashCode =>
+      Object.hash(runtimeType, name, image, price, storeName, storeLogo);
 
   @JsonKey(ignore: true)
   @override
@@ -210,24 +209,24 @@ class _$ProductImpl implements _Product {
 
 abstract class _Product implements Product {
   const factory _Product(
-      {required final String image,
+      {required final String name,
+      required final String image,
       required final String price,
-      required final String description,
-      required final String nameStore,
-      required final String imageStore}) = _$ProductImpl;
+      required final String storeName,
+      required final String storeLogo}) = _$ProductImpl;
 
   factory _Product.fromJson(Map<String, dynamic> json) = _$ProductImpl.fromJson;
 
+  @override
+  String get name;
   @override
   String get image;
   @override
   String get price;
   @override
-  String get description;
+  String get storeName;
   @override
-  String get nameStore;
-  @override
-  String get imageStore;
+  String get storeLogo;
   @override
   @JsonKey(ignore: true)
   _$$ProductImplCopyWith<_$ProductImpl> get copyWith =>

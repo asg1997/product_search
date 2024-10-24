@@ -11,6 +11,7 @@ import 'package:product_search/view/components/album_image_thumbnail.dart';
 import 'package:product_search/view/provider/gallery_album_thumbnails_provider.dart';
 import 'package:product_search/view/provider/gallery_albums_provider.dart';
 import 'package:product_search/view/provider/pick_image_from_gallery_provider.dart';
+import 'package:product_search/view/provider/save_file_to_temporary_provider.dart';
 
 class GalleryWidget extends ConsumerWidget {
   const GalleryWidget({required this.onImageSelected, super.key});
@@ -59,12 +60,12 @@ class AlbumWidget extends ConsumerWidget {
       countPerPage: 9,
     );
 
-    final files =
+    final images =
         ref.watch(galleryAlbumThumbnailsProvider(pagginatedAlbum)).whenOrNull(
                   data: (items) => items,
                 ) ??
             [];
-    if (files.isEmpty) return Container();
+    if (images.isEmpty) return Container();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
@@ -75,7 +76,7 @@ class AlbumWidget extends ConsumerWidget {
             height: 50,
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: files.length > 8
+              onTap: images.length > 8
                   ? () async {
                       final selectedImage =
                           await ref.read(pickeImageFromGalleryProvider.future);
@@ -93,7 +94,7 @@ class AlbumWidget extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  if (files.length > 8)
+                  if (images.length > 8)
                     Text(
                       'Show all',
                       style: AppFonts.medium14
@@ -113,15 +114,16 @@ class AlbumWidget extends ConsumerWidget {
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
             ),
-            itemCount: files.length > 8 ? 8 : files.length,
+            itemCount: images.length > 8 ? 8 : images.length,
             itemBuilder: (_, index) {
-              final item = files[index];
+              final image = images[index];
 
               return AlbumImageThumbnail(
-                image: item,
-                onTap: () {
-                  final file = File.fromRawPath(item);
-                  onImageSelected(file);
+                image: image.thumb,
+                onTap: () async {
+                  final newFile = await ref
+                      .read(saveFileToTemporaryProvider(image.file).future);
+                  onImageSelected(newFile);
                 },
               );
             },

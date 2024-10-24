@@ -10,11 +10,11 @@ typedef Products = List<Product>;
 @freezed
 class Product with _$Product {
   const factory Product({
+    required String name,
     required String image,
     required String price,
-    required String description,
-    required String nameStore,
-    required String imageStore,
+    required String storeName,
+    required String storeLogo,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) =>
