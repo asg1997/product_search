@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:product_search/view/controllers/selected_stores_controller.dart';
 import 'package:product_search/view/controllers/stores_controller.dart';
 
 typedef IsReady = bool;
@@ -17,6 +18,7 @@ class LaunchController extends StateNotifier<IsReady> {
   Future<void> init() async {
     try {
       await ref.read(storesControllerProvider.notifier).init();
+      await ref.read(selectedStoresControllerProvider.notifier).init();
     } finally {
       state = true;
     }

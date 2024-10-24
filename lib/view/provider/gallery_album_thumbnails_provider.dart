@@ -15,9 +15,8 @@ final galleryAlbumThumbnailsProvider = StateNotifierProvider.family.autoDispose<
     initialPage: 1,
     fetchNextItems: (_, offset, page) async {
       final images = await album.path.getAssetListRange(
-        start: offset, end: offset + album.countPerPage,
-        // page: page,
-        // size: album.countPerPage,
+        start: offset,
+        end: offset + album.countPerPage,
       );
 
       final files = <Uint8List>[];

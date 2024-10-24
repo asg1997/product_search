@@ -7,13 +7,20 @@ final storesControllerProvider =
   StoresController.new,
 );
 
+/// Отвечает за получение доступных для поиска магазинов
 class StoresController extends StateNotifier<List<Store>> {
   StoresController(this.ref) : super([]);
 
   final Ref ref;
+  bool _initialized = false;
+  bool get initialized => _initialized;
 
   Future<void> init() async {
     final stores = await ref.read(storesFetcherProvider).getStores();
     state = stores;
+    _initialized = true;
   }
+
+  Future<void> addStore(Store store) async {}
+  Future<void> removeStore(Store store) async {}
 }
