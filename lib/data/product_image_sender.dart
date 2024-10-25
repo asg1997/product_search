@@ -35,12 +35,13 @@ class _ProductImageSenderImpl implements ProductImageSender {
     final fileExt = mimeType.replaceAll('image/', '');
     final filename = '${DateTime.now().millisecondsSinceEpoch}.$fileExt';
     //path.basename(file.path);
-    final uploadName = '$filename$fileExt';
+    final uploadName = filename;
+    // '$filename$fileExt';
     final multipartFile = http.MultipartFile.fromBytes(
       'photo',
       file.readAsBytesSync(),
       filename: uploadName,
-      contentType: MediaType('image', mimeType),
+      contentType: MediaType('image', fileExt),
     );
     // final multipartFile = await http.MultipartFile.fromPath('photo', file.path);
 
