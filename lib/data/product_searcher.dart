@@ -11,7 +11,10 @@ final productsSearcherProvider =
     Provider<ProductsSearcher>(_ProductSearcherImpl.new);
 
 abstract class ProductsSearcher {
-  Future<Products> getProducts(File file, List<model.Store> stores);
+  Future<Products> getProducts({
+    required File file,
+    required List<model.Store> stores,
+  });
 }
 
 class _ProductSearcherImpl implements ProductsSearcher {
@@ -20,7 +23,10 @@ class _ProductSearcherImpl implements ProductsSearcher {
   final Ref ref;
 
   @override
-  Future<Products> getProducts(File file, List<model.Store> stores) async {
+  Future<Products> getProducts({
+    required File file,
+    required List<model.Store> stores,
+  }) async {
     final imageId =
         await ref.read(productImageSenderProvider).saveImageToServer(file);
     try {
@@ -49,7 +55,7 @@ class _ProductSearcherImpl implements ProductsSearcher {
                         'store_geo': store.geo,
                       },
                     )
-                    .toList(), // Убедитесь, что передаете правильный формат
+                    .toList(),
                 'imageId': imageId,
               },
             ),
@@ -68,7 +74,7 @@ class _ProductSearcherImpl implements ProductsSearcher {
       return productsJson
           .map(
             (json) => Product.fromJson(json as Map<String, dynamic>),
-          ) // Приведение типа
+          )
           .toList(); // Возвращаем список Products
     } catch (e) {
       throw Exception(e);
