@@ -5,10 +5,10 @@ class GraphQlConfig {
   GraphQlConfig._();
   static final _instance = GraphQlConfig._();
 
-  static final url = HttpLink('https://anemo.productsearch.app/graphql');
+  static HttpLink link = HttpLink('https://anemo.productsearch.app/graphql');
 
   GraphQLClient get client => GraphQLClient(
-        link: url,
+        link: link,
         cache: GraphQLCache(),
       );
 }
