@@ -5,12 +5,13 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:product_search/core/utils/consts/graph_ql_config.dart';
 import 'package:product_search/data/product_image_sender.dart';
 import 'package:product_search/models/product/product.dart';
+import 'package:product_search/models/store/store.dart' as model;
 
 final productsSearcherProvider =
     Provider<ProductsSearcher>(_ProductSearcherImpl.new);
 
 abstract class ProductsSearcher {
-  Future<Products> getProducts(File file);
+  Future<Products> getProducts(File file, List<model.Store> stores);
 }
 
 class _ProductSearcherImpl implements ProductsSearcher {
@@ -19,10 +20,9 @@ class _ProductSearcherImpl implements ProductsSearcher {
   final Ref ref;
 
   @override
-  Future<Products> getProducts(File file) async {
+  Future<Products> getProducts(File file, List<model.Store> stores) async {
     final imageId =
         await ref.read(productImageSenderProvider).saveImageToServer(file);
-
     try {
       final result = await GraphQlConfig().client.query(
             QueryOptions(
@@ -42,8 +42,15 @@ class _ProductSearcherImpl implements ProductsSearcher {
                 }
               '''),
               variables: {
-                'stores': stores, // Передаем список магазинов
-                'imageId': imageId, // Передаем ID изображения
+                'stores': stores
+                    .map(
+                      (store) => {
+                        'store_name': store.name,
+                        'store_geo': store.geo,
+                      },
+                    )
+                    .toList(), // Убедитесь, что передаете правильный формат
+                'imageId': imageId,
               },
             ),
           );
@@ -53,10 +60,16 @@ class _ProductSearcherImpl implements ProductsSearcher {
       }
 
       final data = result.data;
+      if (data == null || !data.containsKey('visualSearch')) {
+        throw Exception('No data found');
+      }
+
       final productsJson = data['visualSearch'] as List<dynamic>;
       return productsJson
-          .map(model.Product.fromJson)
-          .toList(); // Предполагается, что у вас есть модель Product
+          .map(
+            (json) => Product.fromJson(json as Map<String, dynamic>),
+          ) // Приведение типа
+          .toList(); // Возвращаем список Products
     } catch (e) {
       throw Exception(e);
     }
