@@ -20,7 +20,7 @@ mixin _$Product {
   String get image => throw _privateConstructorUsedError;
   String get price => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
-  String get storeLogo => throw _privateConstructorUsedError;
+  String? get storeLogo => throw _privateConstructorUsedError;
   double get similarity => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -37,7 +37,7 @@ abstract class $ProductCopyWith<$Res> {
       String image,
       String price,
       String storeName,
-      String storeLogo,
+      String? storeLogo,
       double similarity});
 }
 
@@ -58,7 +58,7 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
     Object? image = null,
     Object? price = null,
     Object? storeName = null,
-    Object? storeLogo = null,
+    Object? storeLogo = freezed,
     Object? similarity = null,
   }) {
     return _then(_value.copyWith(
@@ -78,10 +78,10 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.storeName
           : storeName // ignore: cast_nullable_to_non_nullable
               as String,
-      storeLogo: null == storeLogo
+      storeLogo: freezed == storeLogo
           ? _value.storeLogo
           : storeLogo // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       similarity: null == similarity
           ? _value.similarity
           : similarity // ignore: cast_nullable_to_non_nullable
@@ -102,7 +102,7 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
       String image,
       String price,
       String storeName,
-      String storeLogo,
+      String? storeLogo,
       double similarity});
 }
 
@@ -121,7 +121,7 @@ class __$$ProductImplCopyWithImpl<$Res>
     Object? image = null,
     Object? price = null,
     Object? storeName = null,
-    Object? storeLogo = null,
+    Object? storeLogo = freezed,
     Object? similarity = null,
   }) {
     return _then(_$ProductImpl(
@@ -141,10 +141,10 @@ class __$$ProductImplCopyWithImpl<$Res>
           ? _value.storeName
           : storeName // ignore: cast_nullable_to_non_nullable
               as String,
-      storeLogo: null == storeLogo
+      storeLogo: freezed == storeLogo
           ? _value.storeLogo
           : storeLogo // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       similarity: null == similarity
           ? _value.similarity
           : similarity // ignore: cast_nullable_to_non_nullable
@@ -173,7 +173,7 @@ class _$ProductImpl implements _Product {
   @override
   final String storeName;
   @override
-  final String storeLogo;
+  final String? storeLogo;
   @override
   final double similarity;
 
@@ -215,7 +215,7 @@ abstract class _Product implements Product {
       required final String image,
       required final String price,
       required final String storeName,
-      required final String storeLogo,
+      required final String? storeLogo,
       required final double similarity}) = _$ProductImpl;
 
   @override
@@ -227,7 +227,7 @@ abstract class _Product implements Product {
   @override
   String get storeName;
   @override
-  String get storeLogo;
+  String? get storeLogo;
   @override
   double get similarity;
   @override

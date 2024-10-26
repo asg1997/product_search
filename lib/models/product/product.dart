@@ -13,7 +13,7 @@ class Product with _$Product {
     required String image,
     required String price,
     required String storeName,
-    required String storeLogo,
+    required String? storeLogo,
     required double similarity,
   }) = _Product;
 }
