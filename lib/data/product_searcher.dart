@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:product_search/core/utils/consts/graph_ql_config.dart';
+import 'package:product_search/data/mappes/product_mapper.dart';
 import 'package:product_search/data/product_image_sender.dart';
 import 'package:product_search/models/product/product.dart';
 import 'package:product_search/models/store/store.dart' as model;
@@ -34,25 +35,25 @@ class _ProductSearcherImpl implements ProductsSearcher {
             QueryOptions(
               fetchPolicy: FetchPolicy.noCache,
               document: gql(r'''
-                query visualSearch($stores: [StoreInput], $imageId: String!) {
-                  visualSearch(stores: $stores, imageId: $imageId) {
-                    similarity,
-                    item_main_image,
-                    store_name,
-                    store_geo,
-                    item_name,
-                    item_last_price,
-                    item_last_price_sign,
-                    item_url
-                  }
+               query visualSearch($imageId: String!) {
+                visualSearch(stores: [], imageId: $imageId) {
+                  similarity,
+                  item_main_image,
+                  store_name,
+                  store_geo,
+                  item_name,
+                  item_last_price,
+                  item_last_price_sign,
+                  item_url
                 }
-              '''),
+              }
+'''),
               variables: {
                 'stores': stores
                     .map(
                       (store) => {
-                        'store_name': store.name,
-                        'store_geo': store.geo,
+                        'name': store.name,
+                        'geo': store.geo,
                       },
                     )
                     .toList(),
@@ -71,11 +72,8 @@ class _ProductSearcherImpl implements ProductsSearcher {
       }
 
       final productsJson = data['visualSearch'] as List<dynamic>;
-      return productsJson
-          .map(
-            (json) => Product.fromJson(json as Map<String, dynamic>),
-          )
-          .toList(); // Возвращаем список Products
+      final products = ProductMapper().mapProducts(productsJson);
+      return products;
     } catch (e) {
       throw Exception(e);
     }

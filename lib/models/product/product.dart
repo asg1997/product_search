@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product.freezed.dart';
-part 'product.g.dart';
 
 typedef ProductId = String;
 typedef Products = List<Product>;
@@ -15,8 +14,6 @@ class Product with _$Product {
     required String price,
     required String storeName,
     required String storeLogo,
+    required double similarity,
   }) = _Product;
-
-  factory Product.fromJson(Map<String, dynamic> json) =>
-      _$ProductFromJson(json);
 }

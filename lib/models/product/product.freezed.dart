@@ -14,10 +14,6 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Product _$ProductFromJson(Map<String, dynamic> json) {
-  return _Product.fromJson(json);
-}
-
 /// @nodoc
 mixin _$Product {
   String get name => throw _privateConstructorUsedError;
@@ -25,8 +21,8 @@ mixin _$Product {
   String get price => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   String get storeLogo => throw _privateConstructorUsedError;
+  double get similarity => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ProductCopyWith<Product> get copyWith => throw _privateConstructorUsedError;
 }
@@ -41,7 +37,8 @@ abstract class $ProductCopyWith<$Res> {
       String image,
       String price,
       String storeName,
-      String storeLogo});
+      String storeLogo,
+      double similarity});
 }
 
 /// @nodoc
@@ -62,6 +59,7 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
     Object? price = null,
     Object? storeName = null,
     Object? storeLogo = null,
+    Object? similarity = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -84,6 +82,10 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.storeLogo
           : storeLogo // ignore: cast_nullable_to_non_nullable
               as String,
+      similarity: null == similarity
+          ? _value.similarity
+          : similarity // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -100,7 +102,8 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
       String image,
       String price,
       String storeName,
-      String storeLogo});
+      String storeLogo,
+      double similarity});
 }
 
 /// @nodoc
@@ -119,6 +122,7 @@ class __$$ProductImplCopyWithImpl<$Res>
     Object? price = null,
     Object? storeName = null,
     Object? storeLogo = null,
+    Object? similarity = null,
   }) {
     return _then(_$ProductImpl(
       name: null == name
@@ -141,22 +145,24 @@ class __$$ProductImplCopyWithImpl<$Res>
           ? _value.storeLogo
           : storeLogo // ignore: cast_nullable_to_non_nullable
               as String,
+      similarity: null == similarity
+          ? _value.similarity
+          : similarity // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$ProductImpl implements _Product {
   const _$ProductImpl(
       {required this.name,
       required this.image,
       required this.price,
       required this.storeName,
-      required this.storeLogo});
-
-  factory _$ProductImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ProductImplFromJson(json);
+      required this.storeLogo,
+      required this.similarity});
 
   @override
   final String name;
@@ -168,10 +174,12 @@ class _$ProductImpl implements _Product {
   final String storeName;
   @override
   final String storeLogo;
+  @override
+  final double similarity;
 
   @override
   String toString() {
-    return 'Product(name: $name, image: $image, price: $price, storeName: $storeName, storeLogo: $storeLogo)';
+    return 'Product(name: $name, image: $image, price: $price, storeName: $storeName, storeLogo: $storeLogo, similarity: $similarity)';
   }
 
   @override
@@ -185,26 +193,20 @@ class _$ProductImpl implements _Product {
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
             (identical(other.storeLogo, storeLogo) ||
-                other.storeLogo == storeLogo));
+                other.storeLogo == storeLogo) &&
+            (identical(other.similarity, similarity) ||
+                other.similarity == similarity));
   }
 
-  @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, name, image, price, storeName, storeLogo);
+  int get hashCode => Object.hash(
+      runtimeType, name, image, price, storeName, storeLogo, similarity);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ProductImplCopyWith<_$ProductImpl> get copyWith =>
       __$$ProductImplCopyWithImpl<_$ProductImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ProductImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _Product implements Product {
@@ -213,9 +215,8 @@ abstract class _Product implements Product {
       required final String image,
       required final String price,
       required final String storeName,
-      required final String storeLogo}) = _$ProductImpl;
-
-  factory _Product.fromJson(Map<String, dynamic> json) = _$ProductImpl.fromJson;
+      required final String storeLogo,
+      required final double similarity}) = _$ProductImpl;
 
   @override
   String get name;
@@ -227,6 +228,8 @@ abstract class _Product implements Product {
   String get storeName;
   @override
   String get storeLogo;
+  @override
+  double get similarity;
   @override
   @JsonKey(ignore: true)
   _$$ProductImplCopyWith<_$ProductImpl> get copyWith =>
