@@ -1,12 +1,10 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:product_search/core/utils/consts/graph_ql_config.dart';
@@ -34,16 +32,13 @@ class _ProductImageSenderImpl implements ProductImageSender {
 
     final fileExt = mimeType.replaceAll('image/', '');
     final filename = '${DateTime.now().millisecondsSinceEpoch}.$fileExt';
-    //path.basename(file.path);
-    final uploadName = filename;
-    // '$filename$fileExt';
+
     final multipartFile = http.MultipartFile.fromBytes(
       'photo',
       file.readAsBytesSync(),
-      filename: uploadName,
+      filename: filename,
       contentType: MediaType('image', fileExt),
     );
-    // final multipartFile = await http.MultipartFile.fromPath('photo', file.path);
 
     const uploadImage = r'''
 mutation UploadFile($file: File) {
@@ -58,25 +53,13 @@ mutation UploadFile($file: File) {
             variables: {'file': multipartFile},
           ),
         );
-    final data = resp.data;
-    final ex = resp.exception;
-    // Чтение и декодирование ответа
+    final error = resp.exception;
+    if (error != null) throw error;
 
-    // Отправляем запрос
-    // final parsed = _parseResponse(response);
+    final data = resp.data!;
+    final json = data['uploadImage'] as Map<String, dynamic>;
+    final imageId = json['imageId'] as String;
 
-    throw Exception();
-  }
-
-  Future<ImageUrl> _parseResponse(StreamedResponse response) async {
-    final code = response.statusCode;
-
-    final responseBody = await response.stream.bytesToString();
-    final jsonResponse = jsonDecode(responseBody) as Map<String, dynamic>;
-    final errors = jsonResponse['errors'] as List<dynamic>?;
-    if (errors != null && errors.isNotEmpty) {
-      final error = errors.first;
-    }
-    throw UnimplementedError();
+    return imageId;
   }
 }
