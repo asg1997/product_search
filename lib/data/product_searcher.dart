@@ -35,8 +35,8 @@ class _ProductSearcherImpl implements ProductsSearcher {
             QueryOptions(
               fetchPolicy: FetchPolicy.noCache,
               document: gql(r'''
-               query visualSearch($imageId: String!) {
-                visualSearch(stores: [], imageId: $imageId) {
+               query visualSearch($stores: [StoresInput!], $imageId: String!) {
+                visualSearch(stores: $stores, imageId: $imageId) {
                   similarity,
                   item_main_image,
                   store_name,
