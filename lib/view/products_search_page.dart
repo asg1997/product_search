@@ -88,11 +88,13 @@ class _ProductsSearchPageState extends State<ProductsSearchPage> {
                             const SliverToBoxAdapter(child: LoadingWidget()),
                         data: (products) => isListView
                             ? SliverList.separated(
+                                itemCount: products.length,
                                 separatorBuilder: (_, __) => const Gap(8),
                                 itemBuilder: (_, index) =>
                                     ListProductItem(product: products[index]),
                               )
                             : SliverGrid.builder(
+                                itemCount: products.length,
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
