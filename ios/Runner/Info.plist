@@ -28,6 +28,9 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>The app uses the camera for scanning and searching items</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The app uses the camera for scanning and searching items</string>
+
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app needs access to gallery to pick images for searching</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
