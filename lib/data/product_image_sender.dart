@@ -47,12 +47,15 @@ mutation UploadFile($file: File) {
   }
 }''';
 
-    final resp = await GraphQlConfig().client.mutate(
+    final resp = await GraphQlConfig()
+        .client
+        .mutate(
           MutationOptions(
             document: gql(uploadImage),
             variables: {'file': multipartFile},
           ),
-        );
+        )
+        .timeout(const Duration(seconds: 30));
     final error = resp.exception;
     if (error != null) throw error;
 
