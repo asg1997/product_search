@@ -25,8 +25,8 @@ class StoreLogo extends StatelessWidget {
               ? SvgPicture.asset(
                   product.storeLogo!,
                   width: 40,
-                  height: 24,
-                  fit: BoxFit.cover,
+                  height: 20,
+                  fit: BoxFit.scaleDown,
                 )
               : const SizedBox(
                   width: 24,
