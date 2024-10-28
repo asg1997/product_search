@@ -8,8 +8,10 @@ import 'package:product_search/core/utils/extensions.dart';
 import 'package:product_search/core/widgets/loading_widget.dart';
 import 'package:product_search/core/widgets/logo_widget.dart';
 import 'package:product_search/view/components/grid_product_item.dart';
+import 'package:product_search/view/components/image_cropper_wrapper.dart';
 import 'package:product_search/view/components/list_product_item.dart';
 import 'package:product_search/view/provider/get_product_provider.dart';
+import 'package:product_search/view/utils/products_search_page_consts.dart';
 
 class ProductsSearchPage extends StatefulWidget {
   const ProductsSearchPage({required this.image, super.key});
@@ -29,17 +31,30 @@ class ProductsSearchPage extends StatefulWidget {
 
 class _ProductsSearchPageState extends State<ProductsSearchPage> {
   bool isListView = true;
+  bool scrollPriority = false;
 
-  void onScrollChanged(ScrollNotification notification) {
+  bool onScrollChanged(ScrollNotification notification) {
     final pixels = notification.metrics.pixels;
-    if (pixels > 170) {
-      isListView = false;
-      setState(() {});
-    } else {
-      isListView = true;
-      setState(() {});
-    }
+    isListView = pixels <= 170;
+    setState(() {});
+    return true;
   }
+
+  void prioritizeScroll() {
+    scrollPriority = true;
+    setState(() {});
+  }
+
+  void onTapDown(TapDownDetails details) {
+    final yPoint = details.globalPosition.dy;
+    final appBarHeight = ProductsSearchPageConsts.sliverAppBarHeight(context);
+    final onAppBarTapped = yPoint <= appBarHeight;
+    scrollPriority = !onAppBarTapped;
+
+    setState(() {});
+  }
+
+  void onChanged(Rect rect, Offset position) {}
 
   @override
   Widget build(BuildContext context) {
@@ -47,68 +62,82 @@ class _ProductsSearchPageState extends State<ProductsSearchPage> {
       backgroundColor: AppColors.mainLightGrey,
       body: Consumer(
         builder: (_, ref, __) {
-          return NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              onScrollChanged(notification);
-              return true;
-            },
-            child: CustomScrollView(
-              primary: true,
-              slivers: [
-                SliverAppBar(
-                  leading: const BackButton(color: Colors.white),
-                  centerTitle: true,
-                  pinned: true,
-                  backgroundColor: Colors.white,
-                  title: const LogoWidget(),
-                  expandedHeight: MediaQuery.of(context).size.height * .6,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: ClipRRect(
-                        clipBehavior: Clip.hardEdge,
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(24),
-                          bottomRight: Radius.circular(24),
-                        ),
-                        child: Image.file(
-                          widget.image,
-                          fit: BoxFit.cover,
+          return GestureDetector(
+            onTapDown: (details) {},
+            onTapUp: (_) => prioritizeScroll(),
+            onTapCancel: prioritizeScroll,
+            child: NotificationListener<ScrollNotification>(
+              onNotification: onScrollChanged,
+              child: CustomScrollView(
+                physics: scrollPriority
+                    ? null
+                    : const NeverScrollableScrollPhysics(),
+                slivers: [
+                  SliverAppBar(
+                    leading: const BackButton(color: Colors.white),
+                    centerTitle: true,
+                    pinned: true,
+                    backgroundColor: Colors.white,
+                    title: const LogoWidget(),
+                    expandedHeight:
+                        ProductsSearchPageConsts.sliverAppBarHeight(context),
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: ClipRRect(
+                          clipBehavior: Clip.hardEdge,
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(24),
+                            bottomRight: Radius.circular(24),
+                          ),
+                          child: ImageCropperWrapper(
+                            onChanged: onChanged,
+                            child: Image.file(
+                              widget.image,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.all(12),
-                  sliver: ref.watch(searchProductsProvider(widget.image)).when(
-                        error: (err, _) =>
-                            SliverToBoxAdapter(child: Text(err.toString())),
-                        loading: () =>
-                            const SliverToBoxAdapter(child: LoadingWidget()),
-                        data: (products) => isListView
-                            ? SliverList.separated(
-                                itemCount: products.length,
-                                separatorBuilder: (_, __) => const Gap(8),
-                                itemBuilder: (_, index) =>
-                                    ListProductItem(product: products[index]),
-                              )
-                            : SliverGrid.builder(
-                                itemCount: products.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 8,
-                                  mainAxisSpacing: 8,
-                                  childAspectRatio:
-                                      context.isTablet ? 216 / 330 : 172 / 250,
+                  SliverPadding(
+                    padding: const EdgeInsets.all(12),
+                    sliver: ref
+                        .watch(searchProductsProvider(widget.image))
+                        .when(
+                          error: (err, _) =>
+                              SliverToBoxAdapter(child: Text(err.toString())),
+                          loading: () => const SliverToBoxAdapter(
+                            child: LoadingWidget(),
+                          ),
+                          data: (products) => isListView
+                              ? SliverList.separated(
+                                  itemCount: products.length,
+                                  separatorBuilder: (_, __) => const Gap(8),
+                                  itemBuilder: (_, index) => ListProductItem(
+                                    product: products[index],
+                                  ),
+                                )
+                              : SliverGrid.builder(
+                                  itemCount: products.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: context.isTablet ? 3 : 2,
+                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8,
+                                    childAspectRatio: context.isTablet
+                                        ? 216 / 330
+                                        : 172 / 250,
+                                  ),
+                                  itemBuilder: (_, index) => GridProductItem(
+                                    product: products[index],
+                                  ),
                                 ),
-                                itemBuilder: (_, index) =>
-                                    GridProductItem(product: products[index]),
-                              ),
-                      ),
-                ),
-              ],
+                        ),
+                  ),
+                ],
+              ),
             ),
           );
         },
