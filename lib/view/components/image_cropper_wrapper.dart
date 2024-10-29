@@ -13,6 +13,7 @@ import 'package:product_search/data/network_image_downloader.dart';
 import 'package:product_search/view/utils/products_search_page_consts.dart';
 import 'package:styled_divider/styled_divider.dart';
 
+/// Обертка для обрезки картинки
 class ImageCropperWrapper extends ConsumerStatefulWidget {
   const ImageCropperWrapper({
     required this.image,

@@ -10,5 +10,6 @@ class GraphQlConfig {
   GraphQLClient get client => GraphQLClient(
         link: link,
         cache: GraphQLCache(),
+        queryRequestTimeout: const Duration(seconds: 30),
       );
 }

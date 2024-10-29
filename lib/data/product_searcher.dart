@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:product_search/core/utils/consts/graph_ql_config.dart';
+import 'package:product_search/core/utils/services/graph_ql_config.dart';
 import 'package:product_search/data/mappes/product_mapper.dart';
 import 'package:product_search/data/product_image_id_fetcher.dart';
 import 'package:product_search/models/product/product.dart';
@@ -47,7 +47,7 @@ class _ProductSearcherImpl implements ProductsSearcher {
     try {
       final result = await GraphQlConfig().client.query(
             QueryOptions(
-              fetchPolicy: FetchPolicy.noCache,
+              fetchPolicy: FetchPolicy.cacheAndNetwork,
               document: gql(_query),
               variables: {
                 'stores': stores

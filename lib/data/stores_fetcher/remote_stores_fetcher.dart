@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:product_search/core/utils/consts/graph_ql_config.dart';
+import 'package:product_search/core/utils/services/graph_ql_config.dart';
 import 'package:product_search/models/store/store.dart' as model;
 
 final remoteStoresFetcherProvider =

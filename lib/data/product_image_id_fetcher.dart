@@ -7,7 +7,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
-import 'package:product_search/core/utils/consts/graph_ql_config.dart';
+import 'package:product_search/core/utils/services/graph_ql_config.dart';
 import 'package:product_search/models/search_input/search_input.dart';
 
 final productImageSenderProvider =
