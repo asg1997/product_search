@@ -9,6 +9,7 @@ import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/core/utils/image_source/image_source.dart';
 import 'package:product_search/core/widgets/image_source_file.dart';
 import 'package:product_search/data/image_transformer.dart';
+import 'package:product_search/data/network_image_downloader.dart';
 import 'package:product_search/view/utils/products_search_page_consts.dart';
 import 'package:styled_divider/styled_divider.dart';
 
@@ -47,7 +48,7 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
   Future<String> getImageFile() async {
     return switch (widget.image) {
       FileImageSource(path: final path) => path,
-      NetworkImageSource() => throw UnimplementedError(),
+      NetworkImageSource(url: final url) => await downloadFileFromUrl(url),
       AssetImageSource() => throw UnimplementedError(),
     };
   }
@@ -108,6 +109,11 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
       cropRect: rect,
     );
     return cropped;
+  }
+
+  Future<String> downloadFileFromUrl(String url) async {
+    final file = await NetworkImageDownloader.downloadFile(url);
+    return file.path;
   }
 
   @override
