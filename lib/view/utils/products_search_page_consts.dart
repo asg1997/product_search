@@ -11,6 +11,6 @@ class ProductsSearchPageConsts {
           ProductsSearchPageConsts.sliverAppBarHeight(context) / 2 * 1.3,
         ),
         width: MediaQuery.of(context).size.width - 40,
-        height: ProductsSearchPageConsts.sliverAppBarHeight(context) * .8,
+        height: ProductsSearchPageConsts.sliverAppBarHeight(context) * .7,
       );
 }

@@ -39,7 +39,10 @@ class StoreLogo extends StatelessWidget {
             product.storeName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: AppFonts.medium12.copyWith(color: AppColors.mainDarkGray),
+            style: AppFonts.medium12.copyWith(
+              color: AppColors.mainDarkGray,
+              height: 1,
+            ),
           ),
         ),
       ],
