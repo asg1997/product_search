@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,13 +8,14 @@ import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/core/utils/extensions.dart';
 import 'package:product_search/core/widgets/loading_widget.dart';
 import 'package:product_search/core/widgets/logo_widget.dart';
+import 'package:product_search/data/image_transformer.dart';
 import 'package:product_search/view/components/grid_product_item.dart';
 import 'package:product_search/view/components/image_cropper_wrapper.dart';
 import 'package:product_search/view/components/list_product_item.dart';
-import 'package:product_search/view/provider/get_product_provider.dart';
+import 'package:product_search/view/provider/search_products_provider.dart';
 import 'package:product_search/view/utils/products_search_page_consts.dart';
 
-class ProductsSearchPage extends StatefulWidget {
+class ProductsSearchPage extends ConsumerStatefulWidget {
   const ProductsSearchPage({required this.image, super.key});
   final File image;
 
@@ -26,15 +28,33 @@ class ProductsSearchPage extends StatefulWidget {
       );
 
   @override
-  State<ProductsSearchPage> createState() => _ProductsSearchPageState();
+  ConsumerState<ProductsSearchPage> createState() => _ProductsSearchPageState();
 }
 
-class _ProductsSearchPageState extends State<ProductsSearchPage> {
+class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
   bool isListView = true;
   bool scrollPriority = false;
 
+  File? searchImage;
+  bool _compressingImage = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    initialCompressImage();
+  }
+
+  Future<void> initialCompressImage() async {
+    searchImage = await ImageTransformer().convertImage(widget.image);
+    _compressingImage = false;
+    setState(() {});
+  }
+
   bool onScrollChanged(ScrollNotification notification) {
+    if (searchImage == null || _compressingImage) return false;
     final pixels = notification.metrics.pixels;
+    // FIXME: убрать маджик число
     isListView = pixels <= 170;
     setState(() {});
     return true;
@@ -54,58 +74,67 @@ class _ProductsSearchPageState extends State<ProductsSearchPage> {
     setState(() {});
   }
 
-  void onChanged(Rect rect, Offset position) {}
+  Future<void> onImageResize(Rect rect, Offset position) async {
+    _compressingImage = true;
+    setState(() {});
+    searchImage = await ImageTransformer().convertImage(
+      widget.image,
+      rect: rect,
+    );
+    _compressingImage = false;
+    setState(() {});
+    // ignore: unused_result
+    ref.refresh(searchProductsProvider(searchImage!));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.mainLightGrey,
-      body: Consumer(
-        builder: (_, ref, __) {
-          return GestureDetector(
-            onTapDown: (details) {},
-            onTapUp: (_) => prioritizeScroll(),
-            onTapCancel: prioritizeScroll,
-            child: NotificationListener<ScrollNotification>(
-              onNotification: onScrollChanged,
-              child: CustomScrollView(
-                physics: scrollPriority
+      body: GestureDetector(
+        onTapDown: onTapDown,
+        onTapUp: (_) => prioritizeScroll(),
+        onTapCancel: prioritizeScroll,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: onScrollChanged,
+          child: CustomScrollView(
+            physics: searchImage != null
+                ? scrollPriority
                     ? null
-                    : const NeverScrollableScrollPhysics(),
-                slivers: [
-                  SliverAppBar(
-                    leading: const BackButton(color: Colors.white),
-                    centerTitle: true,
-                    pinned: true,
-                    backgroundColor: Colors.white,
-                    title: const LogoWidget(),
-                    expandedHeight:
-                        ProductsSearchPageConsts.sliverAppBarHeight(context),
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: ClipRRect(
-                          clipBehavior: Clip.hardEdge,
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(24),
-                            bottomRight: Radius.circular(24),
-                          ),
-                          child: ImageCropperWrapper(
-                            onChanged: onChanged,
-                            child: Image.file(
-                              widget.image,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
+                    : const NeverScrollableScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                leading: const BackButton(color: Colors.white),
+                centerTitle: true,
+                pinned: true,
+                backgroundColor: Colors.white,
+                title: const LogoWidget(),
+                expandedHeight:
+                    ProductsSearchPageConsts.sliverAppBarHeight(context),
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: ClipRRect(
+                      clipBehavior: Clip.hardEdge,
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
+                      ),
+                      child: ImageCropperWrapper(
+                        onImageResize: onImageResize,
+                        image: widget.image,
                       ),
                     ),
                   ),
-                  SliverPadding(
-                    padding: const EdgeInsets.all(12),
-                    sliver: ref
-                        .watch(searchProductsProvider(widget.image))
-                        .when(
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.all(12),
+                sliver: _compressingImage || searchImage == null
+                    ? const SliverToBoxAdapter(child: LoadingWidget())
+                    : ref.watch(searchProductsProvider(searchImage!)).when(
+                          skipLoadingOnRefresh: false,
                           error: (err, _) =>
                               SliverToBoxAdapter(child: Text(err.toString())),
                           loading: () => const SliverToBoxAdapter(
@@ -135,12 +164,10 @@ class _ProductsSearchPageState extends State<ProductsSearchPage> {
                                   ),
                                 ),
                         ),
-                  ),
-                ],
               ),
-            ),
-          );
-        },
+            ],
+          ),
+        ),
       ),
     );
   }

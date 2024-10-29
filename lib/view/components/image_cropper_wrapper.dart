@@ -1,18 +1,23 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_box_transform/flutter_box_transform.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image/image.dart' as img;
 import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/view/utils/products_search_page_consts.dart';
 import 'package:styled_divider/styled_divider.dart';
 
 class ImageCropperWrapper extends ConsumerStatefulWidget {
   const ImageCropperWrapper({
-    required this.child,
-    required this.onChanged,
+    required this.image,
+    required this.onImageResize,
     super.key,
   });
-  final Widget child;
-  final void Function(Rect rect, Offset position) onChanged;
+  final File image;
+
+  final void Function(Rect rect, Offset position) onImageResize;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -21,21 +26,80 @@ class ImageCropperWrapper extends ConsumerStatefulWidget {
 
 class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
   late Rect rect = ProductsSearchPageConsts.defaultImageClip(context);
+  late TransformResult<Rect, Offset, Size> _result;
+  final GlobalKey _childKey = GlobalKey();
+
+  Timer? _debounce;
 
   void onRectChanged(
     TransformResult<Rect, Offset, Size> result,
     DragUpdateDetails details,
   ) {
     rect = result.rect;
-    widget.onChanged(result.rect, result.position);
+
+    _result = result;
     setState(() {});
+  }
+
+  void onResultChanged() {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 1500), () async {
+      final childBox =
+          _childKey.currentContext?.findRenderObject() as RenderBox?;
+      if (childBox == null) return;
+
+      // Нужно рассчитать масштабные коэфициенты между экраном и изображением.
+      // На телефоне картинка отображается, например, в масштабе 300 х 600,
+      // Хотя реальный размер картинки 600 x 1200.
+      // Поэтому может быть неверный расчет.
+      // Рассчитывается как отношение реальной
+      final image = await img.decodeImageFile(widget.image.path);
+      if (image == null) return;
+      // Определяем соотношения сторон
+      final imageAspectRatio = image.width / image.height;
+      final boxAspectRatio = childBox.size.width / childBox.size.height;
+
+      // Коэффициенты масштабирования
+      double scaleX;
+      double scaleY;
+      var dx = 0.0;
+      var dy = 0.0;
+
+      if (imageAspectRatio > boxAspectRatio) {
+        // Если изображение шире контейнера, то масштабируется по высоте
+        scaleY = image.height / childBox.size.height;
+        scaleX = scaleY;
+        dx = (image.width - childBox.size.width * scaleX) / 2;
+      } else {
+        // Если контейнер шире изображения, то масштабируется по ширине
+        scaleX = image.width / childBox.size.width;
+        scaleY = scaleX;
+        dy = (image.height - childBox.size.height * scaleY) / 2;
+      }
+
+      // Масштабируем позицию и размеры
+      final scalePosition = _result.position.scale(scaleX, scaleY);
+      final scaleRect = Rect.fromCenter(
+        center: Offset(scalePosition.dx + dx, scalePosition.dy + dy),
+        width: rect.width * scaleX,
+        height: rect.height * scaleY,
+      );
+
+      widget.onImageResize(scaleRect, scalePosition);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned.fill(child: widget.child),
+        Positioned.fill(
+          key: _childKey,
+          child: Image.file(
+            widget.image,
+            fit: BoxFit.cover,
+          ),
+        ),
         Positioned.fill(
           child: CustomPaint(
             painter: _CustomPainter(rect),
@@ -56,19 +120,23 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
                     lineStyle: DividerLineStyle.dashed,
                   );
           },
-          cornerHandleBuilder: (context, handle) => Container(
-            height: 16,
-            width: 16,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFFFACB7E),
-                  Color(0xFFF79C9C),
-                ],
+          onDragEnd: (event) => onResultChanged(),
+          onResizeEnd: (_, __) => onResultChanged(),
+          cornerHandleBuilder: (context, handle) {
+            return Container(
+              height: 16,
+              width: 16,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFFFACB7E),
+                    Color(0xFFF79C9C),
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
           onChanged: onRectChanged,
           contentBuilder: (_, rect, flip) {
             return Transform.scale(
