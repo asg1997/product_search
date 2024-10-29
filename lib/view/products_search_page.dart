@@ -9,6 +9,8 @@ import 'package:product_search/core/utils/extensions.dart';
 import 'package:product_search/core/widgets/loading_widget.dart';
 import 'package:product_search/core/widgets/logo_widget.dart';
 import 'package:product_search/data/image_transformer.dart';
+import 'package:product_search/models/product/product.dart';
+import 'package:product_search/models/search_input/search_input.dart';
 import 'package:product_search/view/components/grid_product_item.dart';
 import 'package:product_search/view/components/image_cropper_wrapper.dart';
 import 'package:product_search/view/components/list_product_item.dart';
@@ -17,9 +19,9 @@ import 'package:product_search/view/utils/products_search_page_consts.dart';
 
 class ProductsSearchPage extends ConsumerStatefulWidget {
   const ProductsSearchPage({required this.image, super.key});
-  final File image;
+  final SearchInput image;
 
-  static void navigate(BuildContext context, {required File image}) =>
+  static void navigate(BuildContext context, {required SearchInput image}) =>
       Navigator.push(
         context,
         MaterialPageRoute<void>(
@@ -35,8 +37,8 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
   bool isListView = true;
   bool scrollPriority = false;
 
-  File? searchImage;
-  bool _compressingImage = true;
+  late SearchInput _searchImage = widget.image;
+  bool _compressingImage = false;
 
   @override
   void initState() {
@@ -46,13 +48,20 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
   }
 
   Future<void> initialCompressImage() async {
-    searchImage = await ImageTransformer().convertImage(widget.image);
-    _compressingImage = false;
-    setState(() {});
+    final input = widget.image;
+    if (input is FileSearchInput) {
+      _compressingImage = true;
+      setState(() {});
+      final compressedFile =
+          await ImageTransformer().convertImage(input.filePath);
+      _searchImage = SearchInput.file(compressedFile.path);
+      _compressingImage = false;
+      setState(() {});
+    }
   }
 
   bool onScrollChanged(ScrollNotification notification) {
-    if (searchImage == null || _compressingImage) return false;
+    if (_compressingImage) return false;
     final pixels = notification.metrics.pixels;
     // FIXME: убрать маджик число
     isListView = pixels <= 170;
@@ -74,17 +83,22 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
     setState(() {});
   }
 
-  Future<void> onImageResize(Rect rect, Offset position) async {
+  Future<void> onImageResize(Future<File> croppedImage) async {
     _compressingImage = true;
     setState(() {});
-    searchImage = await ImageTransformer().convertImage(
-      widget.image,
-      rect: rect,
-    );
+
+    final croppedImagePath = (await croppedImage).path;
+    _searchImage = SearchInput.file(croppedImagePath);
+
     _compressingImage = false;
     setState(() {});
     // ignore: unused_result
-    ref.refresh(searchProductsProvider(searchImage!));
+    ref.refresh(searchProductsProvider(_searchImage));
+  }
+
+  Future<void> searchSimilar(Product product) async {
+    final searchInput = SearchInput.url(product.image);
+    ProductsSearchPage.navigate(context, image: searchInput);
   }
 
   @override
@@ -98,7 +112,7 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
         child: NotificationListener<ScrollNotification>(
           onNotification: onScrollChanged,
           child: CustomScrollView(
-            physics: searchImage != null
+            physics: _compressingImage
                 ? scrollPriority
                     ? null
                     : const NeverScrollableScrollPhysics()
@@ -123,7 +137,7 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
                       ),
                       child: ImageCropperWrapper(
                         onImageResize: onImageResize,
-                        image: widget.image,
+                        image: widget.image.imageSource(),
                       ),
                     ),
                   ),
@@ -131,9 +145,9 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(12),
-                sliver: _compressingImage || searchImage == null
+                sliver: _compressingImage
                     ? const SliverToBoxAdapter(child: LoadingWidget())
-                    : ref.watch(searchProductsProvider(searchImage!)).when(
+                    : ref.watch(searchProductsProvider(_searchImage)).when(
                           skipLoadingOnRefresh: false,
                           error: (err, _) =>
                               SliverToBoxAdapter(child: Text(err.toString())),
@@ -146,6 +160,8 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
                                   separatorBuilder: (_, __) => const Gap(8),
                                   itemBuilder: (_, index) => ListProductItem(
                                     product: products[index],
+                                    onImageTapped: () =>
+                                        searchSimilar(products[index]),
                                   ),
                                 )
                               : SliverGrid.builder(

@@ -10,9 +10,14 @@ import 'package:product_search/view/components/price_widget.dart';
 import 'package:product_search/view/components/store_logo.dart';
 
 class ListProductItem extends ConsumerWidget {
-  const ListProductItem({required this.product, super.key});
+  const ListProductItem({
+    required this.product,
+    required this.onImageTapped,
+    super.key,
+  });
 
   final Product product;
+  final VoidCallback onImageTapped;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +32,11 @@ class ListProductItem extends ConsumerWidget {
           ),
           child: Row(
             children: [
-              _Image(productImage: product.image),
+              // КАРТИНКА
+              GestureDetector(
+                onTap: onImageTapped,
+                child: _Image(productImage: product.image),
+              ),
               const Gap(12),
               Expanded(
                 child: Column(

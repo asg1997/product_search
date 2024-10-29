@@ -13,12 +13,14 @@ class LoadingWidget extends StatelessWidget {
   final double strokeWidth;
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox.square(
-        dimension: side,
-        child: CircularProgressIndicator(
-          color: color ?? AppColors.mainYellow1,
-          strokeWidth: strokeWidth,
+    return RepaintBoundary(
+      child: Center(
+        child: SizedBox.square(
+          dimension: side,
+          child: CircularProgressIndicator(
+            color: color ?? AppColors.mainYellow1,
+            strokeWidth: strokeWidth,
+          ),
         ),
       ),
     );

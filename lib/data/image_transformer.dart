@@ -11,11 +11,11 @@ import 'package:path_provider/path_provider.dart';
 
 class ImageTransformer {
   Future<File> convertImage(
-    File inputFile, {
-    Rect? rect,
+    String inputFile, {
+    Rect? cropRect,
   }) async {
-    if (rect != null) {
-      final croppedFile = await _cropImageAndResave(inputFile, rect);
+    if (cropRect != null) {
+      final croppedFile = await _cropImageAndResave(inputFile, cropRect);
       final webp = await _convertToWebP(croppedFile);
       return webp;
     } else {
@@ -24,19 +24,19 @@ class ImageTransformer {
     }
   }
 
-  Future<File> _cropImageAndResave(File inputFile, Rect rect) async {
+  Future<String> _cropImageAndResave(String inputFile, Rect rect) async {
     final cropped = await _cropImage(inputFile, rect);
     final tempDir = (await getTemporaryDirectory()).path;
     final newName =
-        '${path.basenameWithoutExtension(inputFile.path)}-${math.Random().nextInt(100000)}';
+        '${path.basenameWithoutExtension(inputFile)}-${math.Random().nextInt(100000)}';
     final newPath = '$tempDir/$newName.jpg';
 
     await img.encodeImageFile(newPath, cropped);
-    return File(newPath);
+    return newPath;
   }
 
-  Future<img.Image> _cropImage(File inputFile, Rect rect) async {
-    final image = await img.decodeImageFile(inputFile.path);
+  Future<img.Image> _cropImage(String inputFile, Rect rect) async {
+    final image = await img.decodeImageFile(inputFile);
     if (image == null) throw Exception('Unable to compress image');
 
     // final cropped = img.copyCrop(
@@ -56,13 +56,13 @@ class ImageTransformer {
     return cropped;
   }
 
-  Future<File> _convertToWebP(File inputFile) async {
-    final bytes = inputFile.readAsBytesSync();
+  Future<File> _convertToWebP(String inputFile) async {
+    final bytes = File(inputFile).readAsBytesSync();
     final outputBytes = await FlutterImageCompress.compressWithList(
       bytes,
       format: CompressFormat.webp,
     );
-    final file = inputFile.writeAsBytes(outputBytes);
+    final file = File(inputFile).writeAsBytes(outputBytes);
     return file;
   }
 }

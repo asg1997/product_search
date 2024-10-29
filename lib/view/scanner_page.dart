@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:product_search/core/utils/consts/app_fonts.dart';
 import 'package:product_search/core/widgets/loading_widget.dart';
 import 'package:product_search/core/widgets/main_app_bar.dart';
+import 'package:product_search/models/search_input/search_input.dart';
 import 'package:product_search/resources/resources.dart';
 import 'package:product_search/view/components/gallery_button.dart';
 import 'package:product_search/view/components/gallery_widget.dart';
@@ -58,7 +59,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   Widget build(BuildContext context) {
     ref.listen(_selectedImageProvider, (_, image) {
       if (image == null) return;
-      ProductsSearchPage.navigate(context, image: image);
+      ProductsSearchPage.navigate(context, image: SearchInput.file(image.path));
     });
 
     final galleryShown = ref.watch(_galleryShownProvider);

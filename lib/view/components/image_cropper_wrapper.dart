@@ -6,6 +6,9 @@ import 'package:flutter_box_transform/flutter_box_transform.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:product_search/core/utils/consts/app_colors.dart';
+import 'package:product_search/core/utils/image_source/image_source.dart';
+import 'package:product_search/core/widgets/image_source_file.dart';
+import 'package:product_search/data/image_transformer.dart';
 import 'package:product_search/view/utils/products_search_page_consts.dart';
 import 'package:styled_divider/styled_divider.dart';
 
@@ -15,9 +18,9 @@ class ImageCropperWrapper extends ConsumerStatefulWidget {
     required this.onImageResize,
     super.key,
   });
-  final File image;
+  final ImageSource image;
 
-  final void Function(Rect rect, Offset position) onImageResize;
+  final void Function(Future<File> croppedImage) onImageResize;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -41,6 +44,14 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
     setState(() {});
   }
 
+  Future<String> getImageFile() async {
+    return switch (widget.image) {
+      FileImageSource(path: final path) => path,
+      NetworkImageSource() => throw UnimplementedError(),
+      AssetImageSource() => throw UnimplementedError(),
+    };
+  }
+
   void onResultChanged() {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 1500), () async {
@@ -48,12 +59,14 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
           _childKey.currentContext?.findRenderObject() as RenderBox?;
       if (childBox == null) return;
 
+      final file = await getImageFile();
+
       // Нужно рассчитать масштабные коэфициенты между экраном и изображением.
       // На телефоне картинка отображается, например, в масштабе 300 х 600,
       // Хотя реальный размер картинки 600 x 1200.
       // Поэтому может быть неверный расчет.
       // Рассчитывается как отношение реальной
-      final image = await img.decodeImageFile(widget.image.path);
+      final image = await img.decodeImageFile(file);
       if (image == null) return;
       // Определяем соотношения сторон
       final imageAspectRatio = image.width / image.height;
@@ -85,8 +98,16 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
         height: rect.height * scaleY,
       );
 
-      widget.onImageResize(scaleRect, scalePosition);
+      widget.onImageResize(cropFile(file, scaleRect));
     });
+  }
+
+  Future<File> cropFile(String inputFile, Rect rect) async {
+    final cropped = await ImageTransformer().convertImage(
+      inputFile,
+      cropRect: rect,
+    );
+    return cropped;
   }
 
   @override
@@ -95,8 +116,8 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
       children: [
         Positioned.fill(
           key: _childKey,
-          child: Image.file(
-            widget.image,
+          child: ImageSourceWidget(
+            source: widget.image,
             fit: BoxFit.cover,
           ),
         ),

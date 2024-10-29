@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:product_search/core/utils/consts/graph_ql_config.dart';
 import 'package:product_search/data/mappes/product_mapper.dart';
-import 'package:product_search/data/product_image_sender.dart';
+import 'package:product_search/data/product_image_id_fetcher.dart';
 import 'package:product_search/models/product/product.dart';
+import 'package:product_search/models/search_input/search_input.dart';
 import 'package:product_search/models/store/store.dart' as model;
 
 final productsSearcherProvider =
@@ -13,7 +12,7 @@ final productsSearcherProvider =
 
 abstract class ProductsSearcher {
   Future<Products> getProducts({
-    required File file,
+    required SearchInput input,
     required List<model.Store> stores,
   });
 }
@@ -23,18 +22,7 @@ class _ProductSearcherImpl implements ProductsSearcher {
 
   final Ref ref;
 
-  @override
-  Future<Products> getProducts({
-    required File file,
-    required List<model.Store> stores,
-  }) async {
-    final imageId =
-        await ref.read(productImageSenderProvider).saveImageToServer(file);
-    try {
-      final result = await GraphQlConfig().client.query(
-            QueryOptions(
-              fetchPolicy: FetchPolicy.noCache,
-              document: gql(r'''
+  final _query = r'''
                query visualSearch($stores: [StoresInput!], $imageId: String!) {
                 visualSearch(stores: $stores, imageId: $imageId) {
                   similarity,
@@ -47,7 +35,20 @@ class _ProductSearcherImpl implements ProductsSearcher {
                   item_url
                 }
               }
-'''),
+''';
+
+  @override
+  Future<Products> getProducts({
+    required SearchInput input,
+    required List<model.Store> stores,
+  }) async {
+    final imageId =
+        await ref.read(productImageSenderProvider).getImageId(input);
+    try {
+      final result = await GraphQlConfig().client.query(
+            QueryOptions(
+              fetchPolicy: FetchPolicy.noCache,
+              document: gql(_query),
               variables: {
                 'stores': stores
                     .map(
