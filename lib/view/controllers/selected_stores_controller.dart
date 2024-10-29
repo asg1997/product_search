@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:product_search/data/selected_stores_storage.dart';
 import 'package:product_search/models/store/store.dart';
-import 'package:product_search/view/provider/stores_provider.dart';
+import 'package:product_search/view/provider/all_stores_provider.dart';
 
 final selectedStoresControllerProvider =
     StateNotifierProvider<SelectedStoresController, List<Store>>(
@@ -21,7 +21,7 @@ class SelectedStoresController extends StateNotifier<List<Store>> {
     if (stores != null) {
       state = stores;
     } else {
-      final avaliableStores = ref.read(storesProvider);
+      final avaliableStores = ref.read(allStoresProvider);
       await _storage.updateStores(avaliableStores);
       state = avaliableStores;
     }

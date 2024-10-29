@@ -56,7 +56,7 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
 
   void onResultChanged() {
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 1500), () async {
+    _debounce = Timer(const Duration(milliseconds: 1200), () async {
       final childBox =
           _childKey.currentContext?.findRenderObject() as RenderBox?;
       if (childBox == null) return;

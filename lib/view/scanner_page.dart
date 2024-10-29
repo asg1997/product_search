@@ -21,11 +21,12 @@ final _selectedImageProvider = StateProvider.autoDispose<File?>((ref) => null);
 
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({super.key});
-  static void navigate(BuildContext context) => Navigator.push(
+  static void navigate(BuildContext context) => Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(
           builder: (_) => const ScannerPage(),
         ),
+        (_) => false,
       );
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ScannerPageState();

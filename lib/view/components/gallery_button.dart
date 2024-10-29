@@ -9,8 +9,10 @@ final lastGalleryImageProvider = FutureProvider.autoDispose<File?>((ref) async {
   final file = await ref.watch(galleryAlbumsPathsProvider).whenOrNull(
     data: (paths) async {
       if (paths.isEmpty) return null;
-      final allImagesAlbum = paths.first;
-      final images = await allImagesAlbum.getAssetListPaged(page: 1, size: 1);
+      final allImagesAlbum =
+          paths.where((element) => element.isAll).firstOrNull;
+      if (allImagesAlbum == null) return null;
+      final images = await allImagesAlbum.getAssetListRange(start: 0, end: 1);
       if (images.isEmpty) return null;
       final file = await images.first.file;
       return file;

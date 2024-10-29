@@ -5,8 +5,8 @@ import 'package:product_search/core/utils/consts/app_colors.dart';
 import 'package:product_search/core/utils/consts/app_fonts.dart';
 import 'package:product_search/models/store/store.dart';
 import 'package:product_search/resources/resources.dart';
+import 'package:product_search/view/provider/all_stores_provider.dart';
 import 'package:product_search/view/provider/selected_stores_provider.dart';
-import 'package:product_search/view/provider/stores_provider.dart';
 
 class StoresGridView extends ConsumerWidget {
   const StoresGridView({
@@ -18,7 +18,7 @@ class StoresGridView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final avaliableStores = ref.watch(storesProvider);
+    final avaliableStores = ref.watch(allStoresProvider);
     final selectedStores = ref.watch(selectedStoresProvider);
 
     final updatedSelectedStores = [...selectedStores];
