@@ -22,6 +22,7 @@ class ImageSourceWidget extends ConsumerWidget {
       fit: fit,
       width: width,
       height: height,
+      gaplessPlayback: true,
       image: source.when(
         file: (path) => MemoryImage(File(path).readAsBytesSync()),
         network: NetworkImage.new,

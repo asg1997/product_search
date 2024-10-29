@@ -40,6 +40,8 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
   late SearchInput _searchImage = widget.image;
   bool _compressingImage = false;
 
+  Color _appBarColor = AppColors.mainLightGrey;
+
   @override
   void initState() {
     super.initState();
@@ -63,8 +65,8 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
   bool onScrollChanged(ScrollNotification notification) {
     if (_compressingImage) return false;
     final pixels = notification.metrics.pixels;
-    // FIXME: убрать маджик число
-    isListView = pixels <= 170;
+    isListView = pixels <= MediaQuery.of(context).size.height * .2;
+    _appBarColor = !isListView ? Colors.white : AppColors.mainLightGrey;
     setState(() {});
     return true;
   }
@@ -116,13 +118,13 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
                 ? scrollPriority
                     ? null
                     : const NeverScrollableScrollPhysics()
-                : const NeverScrollableScrollPhysics(),
+                : null,
             slivers: [
               SliverAppBar(
                 leading: const BackButton(color: Colors.white),
                 centerTitle: true,
                 pinned: true,
-                backgroundColor: Colors.white,
+                backgroundColor: _appBarColor,
                 title: const LogoWidget(),
                 expandedHeight:
                     ProductsSearchPageConsts.sliverAppBarHeight(context),
