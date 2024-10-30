@@ -15,5 +15,6 @@ class Product with _$Product {
     required String storeName,
     required String? storeLogo,
     required double similarity,
+    required String urlId,
   }) = _Product;
 }

@@ -20,6 +20,7 @@ class MainAppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
       centerTitle: true,
       elevation: 0,
 
+      leading: Navigator.of(context).canPop() ? const BackButton() : null,
       // НАЗВАНИЕ
       title: const LogoWidget(),
     );

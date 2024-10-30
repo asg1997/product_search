@@ -16,6 +16,7 @@ class ProductMapper {
       storeName: apiProduct.storeName,
       storeLogo: _getImage(apiProduct.storeName),
       similarity: apiProduct.similarity,
+      urlId: apiProduct.itemUrl,
     );
   }
 

@@ -8,6 +8,7 @@ import 'package:product_search/models/product/product.dart';
 import 'package:product_search/resources/resources.dart';
 import 'package:product_search/view/components/price_widget.dart';
 import 'package:product_search/view/components/store_logo.dart';
+import 'package:product_search/view/product_page.dart';
 
 class ListProductItem extends ConsumerWidget {
   const ListProductItem({
@@ -39,20 +40,24 @@ class ListProductItem extends ConsumerWidget {
               ),
               const Gap(12),
               Expanded(
-                child: Column(
-                  children: [
-                    if (!tablet) ...[
-                      Row(
-                        children: [
-                          PriceWidget(price: product.price),
-                          const Gap(8),
-                          Expanded(child: StoreLogo(product: product)),
-                        ],
-                      ),
-                      const Gap(16),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => ProductPage.navigate(context, product: product),
+                  child: Column(
+                    children: [
+                      if (!tablet) ...[
+                        Row(
+                          children: [
+                            PriceWidget(price: product.price),
+                            const Gap(8),
+                            Expanded(child: StoreLogo(product: product)),
+                          ],
+                        ),
+                        const Gap(16),
+                      ],
+                      _ProductName(product: product),
                     ],
-                    _ProductName(product: product),
-                  ],
+                  ),
                 ),
               ),
               if (tablet) ...[

@@ -9,6 +9,7 @@ import 'package:product_search/models/product/product.dart';
 import 'package:product_search/resources/resources.dart';
 import 'package:product_search/view/components/price_widget.dart';
 import 'package:product_search/view/components/store_logo.dart';
+import 'package:product_search/view/product_page.dart';
 
 class GridProductItem extends ConsumerWidget {
   const GridProductItem({
@@ -36,15 +37,20 @@ class GridProductItem extends ConsumerWidget {
           ),
           const Gap(12),
           Expanded(
-            child: Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: context.isTablet ? 24 : 12),
-              child: Column(
-                children: [
-                  Expanded(child: _ProductName(product: product)),
-                  const Gap(4),
-                  StoreLogo(product: product),
-                ],
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => ProductPage.navigate(context, product: product),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.isTablet ? 24 : 12,
+                ),
+                child: Column(
+                  children: [
+                    Expanded(child: _ProductName(product: product)),
+                    const Gap(4),
+                    StoreLogo(product: product),
+                  ],
+                ),
               ),
             ),
           ),

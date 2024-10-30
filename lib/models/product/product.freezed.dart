@@ -22,6 +22,7 @@ mixin _$Product {
   String get storeName => throw _privateConstructorUsedError;
   String? get storeLogo => throw _privateConstructorUsedError;
   double get similarity => throw _privateConstructorUsedError;
+  String get urlId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProductCopyWith<Product> get copyWith => throw _privateConstructorUsedError;
@@ -38,7 +39,8 @@ abstract class $ProductCopyWith<$Res> {
       String price,
       String storeName,
       String? storeLogo,
-      double similarity});
+      double similarity,
+      String urlId});
 }
 
 /// @nodoc
@@ -60,6 +62,7 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
     Object? storeName = null,
     Object? storeLogo = freezed,
     Object? similarity = null,
+    Object? urlId = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -86,6 +89,10 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.similarity
           : similarity // ignore: cast_nullable_to_non_nullable
               as double,
+      urlId: null == urlId
+          ? _value.urlId
+          : urlId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -103,7 +110,8 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
       String price,
       String storeName,
       String? storeLogo,
-      double similarity});
+      double similarity,
+      String urlId});
 }
 
 /// @nodoc
@@ -123,6 +131,7 @@ class __$$ProductImplCopyWithImpl<$Res>
     Object? storeName = null,
     Object? storeLogo = freezed,
     Object? similarity = null,
+    Object? urlId = null,
   }) {
     return _then(_$ProductImpl(
       name: null == name
@@ -149,6 +158,10 @@ class __$$ProductImplCopyWithImpl<$Res>
           ? _value.similarity
           : similarity // ignore: cast_nullable_to_non_nullable
               as double,
+      urlId: null == urlId
+          ? _value.urlId
+          : urlId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -162,7 +175,8 @@ class _$ProductImpl implements _Product {
       required this.price,
       required this.storeName,
       required this.storeLogo,
-      required this.similarity});
+      required this.similarity,
+      required this.urlId});
 
   @override
   final String name;
@@ -176,10 +190,12 @@ class _$ProductImpl implements _Product {
   final String? storeLogo;
   @override
   final double similarity;
+  @override
+  final String urlId;
 
   @override
   String toString() {
-    return 'Product(name: $name, image: $image, price: $price, storeName: $storeName, storeLogo: $storeLogo, similarity: $similarity)';
+    return 'Product(name: $name, image: $image, price: $price, storeName: $storeName, storeLogo: $storeLogo, similarity: $similarity, urlId: $urlId)';
   }
 
   @override
@@ -195,12 +211,13 @@ class _$ProductImpl implements _Product {
             (identical(other.storeLogo, storeLogo) ||
                 other.storeLogo == storeLogo) &&
             (identical(other.similarity, similarity) ||
-                other.similarity == similarity));
+                other.similarity == similarity) &&
+            (identical(other.urlId, urlId) || other.urlId == urlId));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, name, image, price, storeName, storeLogo, similarity);
+      runtimeType, name, image, price, storeName, storeLogo, similarity, urlId);
 
   @JsonKey(ignore: true)
   @override
@@ -216,7 +233,8 @@ abstract class _Product implements Product {
       required final String price,
       required final String storeName,
       required final String? storeLogo,
-      required final double similarity}) = _$ProductImpl;
+      required final double similarity,
+      required final String urlId}) = _$ProductImpl;
 
   @override
   String get name;
@@ -230,6 +248,8 @@ abstract class _Product implements Product {
   String? get storeLogo;
   @override
   double get similarity;
+  @override
+  String get urlId;
   @override
   @JsonKey(ignore: true)
   _$$ProductImplCopyWith<_$ProductImpl> get copyWith =>
