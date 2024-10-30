@@ -8,9 +8,9 @@ class ProductsSearchPageConsts {
   static Rect defaultImageClip(BuildContext context) => Rect.fromCenter(
         center: Offset(
           MediaQuery.of(context).size.width / 2,
-          ProductsSearchPageConsts.sliverAppBarHeight(context) / 2 * 1.3,
+          ProductsSearchPageConsts.sliverAppBarHeight(context) / 2 * 1.25,
         ),
-        width: MediaQuery.of(context).size.width - 40,
-        height: ProductsSearchPageConsts.sliverAppBarHeight(context) * .7,
+        width: MediaQuery.of(context).size.width - 45,
+        height: ProductsSearchPageConsts.sliverAppBarHeight(context) * .75,
       );
 }

@@ -115,6 +115,7 @@ class _Image extends ConsumerWidget {
             children: [
               Image.network(
                 productImage,
+                errorBuilder: (context, error, stackTrace) => Container(),
                 fit: BoxFit.cover,
                 width: tablet ? 120 : 112,
                 height: tablet ? 120 : 112,

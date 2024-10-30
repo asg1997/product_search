@@ -12,7 +12,7 @@ import 'package:product_search/data/image_transformer.dart';
 import 'package:product_search/models/product/product.dart';
 import 'package:product_search/models/search_input/search_input.dart';
 import 'package:product_search/view/components/grid_product_item.dart';
-import 'package:product_search/view/components/image_cropper_wrapper.dart';
+import 'package:product_search/view/components/image_cropper_widget.dart';
 import 'package:product_search/view/components/list_product_item.dart';
 import 'package:product_search/view/provider/search_products_provider.dart';
 import 'package:product_search/view/utils/products_search_page_consts.dart';
@@ -35,7 +35,13 @@ class ProductsSearchPage extends ConsumerStatefulWidget {
 
 class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
   bool isListView = true;
-  bool scrollPriority = false;
+  bool scrollEnabled = true;
+
+  ScrollPhysics? get scrollPhysics {
+    if (_compressingImage) return const NeverScrollableScrollPhysics();
+    if (!scrollEnabled) return const NeverScrollableScrollPhysics();
+    return null;
+  }
 
   late SearchInput _searchImage = widget.image;
   bool _compressingImage = false;
@@ -63,7 +69,6 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
   }
 
   bool onScrollChanged(ScrollNotification notification) {
-    if (_compressingImage) return false;
     final pixels = notification.metrics.pixels;
     isListView = pixels <= MediaQuery.of(context).size.height * .2;
     _appBarColor = !isListView ? Colors.white : AppColors.mainLightGrey;
@@ -71,17 +76,13 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
     return true;
   }
 
-  void prioritizeScroll() {
-    scrollPriority = true;
+  void onImageCropperTapDown() {
+    scrollEnabled = false;
     setState(() {});
   }
 
-  void onTapDown(TapDownDetails details) {
-    final yPoint = details.globalPosition.dy;
-    final appBarHeight = ProductsSearchPageConsts.sliverAppBarHeight(context);
-    final onAppBarTapped = yPoint <= appBarHeight;
-    scrollPriority = !onAppBarTapped;
-
+  void onImageCropperTapUp() {
+    scrollEnabled = true;
     setState(() {});
   }
 
@@ -107,29 +108,25 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.mainLightGrey,
-      body: GestureDetector(
-        onTapDown: onTapDown,
-        onTapUp: (_) => prioritizeScroll(),
-        onTapCancel: prioritizeScroll,
-        child: NotificationListener<ScrollNotification>(
-          onNotification: onScrollChanged,
-          child: CustomScrollView(
-            physics: _compressingImage
-                ? scrollPriority
-                    ? null
-                    : const NeverScrollableScrollPhysics()
-                : null,
-            slivers: [
-              SliverAppBar(
-                leading: const BackButton(color: Colors.white),
-                centerTitle: true,
-                pinned: true,
-                backgroundColor: _appBarColor,
-                title: const LogoWidget(),
-                expandedHeight:
-                    ProductsSearchPageConsts.sliverAppBarHeight(context),
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Padding(
+      body: NotificationListener<ScrollNotification>(
+        onNotification: onScrollChanged,
+        child: CustomScrollView(
+          physics: scrollPhysics,
+          slivers: [
+            SliverAppBar(
+              leading: const BackButton(color: Colors.white),
+              centerTitle: true,
+              pinned: true,
+              backgroundColor: _appBarColor,
+              title: const LogoWidget(),
+              expandedHeight:
+                  ProductsSearchPageConsts.sliverAppBarHeight(context),
+              flexibleSpace: FlexibleSpaceBar(
+                background: GestureDetector(
+                  onTapDown: (_) => onImageCropperTapDown(),
+                  onTapUp: (_) => onImageCropperTapUp(),
+                  onTapCancel: onImageCropperTapUp,
+                  child: Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: ClipRRect(
                       clipBehavior: Clip.hardEdge,
@@ -137,7 +134,7 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
                         bottomLeft: Radius.circular(24),
                         bottomRight: Radius.circular(24),
                       ),
-                      child: ImageCropperWrapper(
+                      child: ImageCropperWidget(
                         onImageResize: onImageResize,
                         image: widget.image.imageSource(),
                       ),
@@ -145,48 +142,47 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
                   ),
                 ),
               ),
-              SliverPadding(
-                padding: const EdgeInsets.all(12),
-                sliver: _compressingImage
-                    ? const SliverToBoxAdapter(child: LoadingWidget())
-                    : ref.watch(searchProductsProvider(_searchImage)).when(
-                          skipLoadingOnRefresh: false,
-                          error: (err, _) =>
-                              SliverToBoxAdapter(child: Text(err.toString())),
-                          loading: () => const SliverToBoxAdapter(
-                            child: LoadingWidget(),
-                          ),
-                          data: (products) => isListView
-                              ? SliverList.separated(
-                                  itemCount: products.length,
-                                  separatorBuilder: (_, __) => const Gap(8),
-                                  itemBuilder: (_, index) => ListProductItem(
-                                    product: products[index],
-                                    onImageTapped: () =>
-                                        searchSimilar(products[index]),
-                                  ),
-                                )
-                              : SliverGrid.builder(
-                                  itemCount: products.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: context.isTablet ? 3 : 2,
-                                    crossAxisSpacing: 8,
-                                    mainAxisSpacing: 8,
-                                    childAspectRatio: context.isTablet
-                                        ? 216 / 330
-                                        : 172 / 250,
-                                  ),
-                                  itemBuilder: (_, index) => GridProductItem(
-                                    product: products[index],
-                                    onImageTapped: () =>
-                                        searchSimilar(products[index]),
-                                  ),
-                                ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.all(12),
+              sliver: _compressingImage
+                  ? const SliverToBoxAdapter(child: LoadingWidget())
+                  : ref.watch(searchProductsProvider(_searchImage)).when(
+                        skipLoadingOnRefresh: false,
+                        error: (err, _) =>
+                            SliverToBoxAdapter(child: Text(err.toString())),
+                        loading: () => const SliverToBoxAdapter(
+                          child: LoadingWidget(),
                         ),
-              ),
-            ],
-          ),
+                        data: (products) => isListView
+                            ? SliverList.separated(
+                                itemCount: products.length,
+                                separatorBuilder: (_, __) => const Gap(8),
+                                itemBuilder: (_, index) => ListProductItem(
+                                  product: products[index],
+                                  onImageTapped: () =>
+                                      searchSimilar(products[index]),
+                                ),
+                              )
+                            : SliverGrid.builder(
+                                itemCount: products.length,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: context.isTablet ? 3 : 2,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                  childAspectRatio:
+                                      context.isTablet ? 216 / 330 : 172 / 250,
+                                ),
+                                itemBuilder: (_, index) => GridProductItem(
+                                  product: products[index],
+                                  onImageTapped: () =>
+                                      searchSimilar(products[index]),
+                                ),
+                              ),
+                      ),
+            ),
+          ],
         ),
       ),
     );

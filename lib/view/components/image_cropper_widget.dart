@@ -14,8 +14,8 @@ import 'package:product_search/view/utils/products_search_page_consts.dart';
 import 'package:styled_divider/styled_divider.dart';
 
 /// Обертка для обрезки картинки
-class ImageCropperWrapper extends ConsumerStatefulWidget {
-  const ImageCropperWrapper({
+class ImageCropperWidget extends ConsumerStatefulWidget {
+  const ImageCropperWidget({
     required this.image,
     required this.onImageResize,
     super.key,
@@ -29,7 +29,7 @@ class ImageCropperWrapper extends ConsumerStatefulWidget {
       _ImageCropperWrapperState();
 }
 
-class _ImageCropperWrapperState extends ConsumerState<ImageCropperWrapper> {
+class _ImageCropperWrapperState extends ConsumerState<ImageCropperWidget> {
   late Rect rect = ProductsSearchPageConsts.defaultImageClip(context);
   late TransformResult<Rect, Offset, Size> _result;
   final GlobalKey _childKey = GlobalKey();
