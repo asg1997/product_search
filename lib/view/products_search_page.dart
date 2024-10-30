@@ -179,6 +179,8 @@ class _ProductsSearchPageState extends ConsumerState<ProductsSearchPage> {
                                   ),
                                   itemBuilder: (_, index) => GridProductItem(
                                     product: products[index],
+                                    onImageTapped: () =>
+                                        searchSimilar(products[index]),
                                   ),
                                 ),
                         ),

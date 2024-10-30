@@ -11,9 +11,14 @@ import 'package:product_search/view/components/price_widget.dart';
 import 'package:product_search/view/components/store_logo.dart';
 
 class GridProductItem extends ConsumerWidget {
-  const GridProductItem({required this.product, super.key});
+  const GridProductItem({
+    required this.onImageTapped,
+    required this.product,
+    super.key,
+  });
 
   final Product product;
+  final VoidCallback onImageTapped;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,7 +30,10 @@ class GridProductItem extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          _Image(product: product),
+          GestureDetector(
+            onTap: onImageTapped,
+            child: _Image(product: product),
+          ),
           const Gap(12),
           Expanded(
             child: Padding(
