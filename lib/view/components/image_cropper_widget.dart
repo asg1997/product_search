@@ -68,39 +68,44 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWidget> {
       // Хотя реальный размер картинки 600 x 1200.
       // Поэтому может быть неверный расчет.
       // Рассчитывается как отношение реальной
-      final image = await img.decodeImageFile(file);
-      if (image == null) return;
-      // Определяем соотношения сторон
-      final imageAspectRatio = image.width / image.height;
-      final boxAspectRatio = childBox.size.width / childBox.size.height;
+      try {
+        final imageBytes = await File(file).readAsBytes();
+        final image = img.decodeImage(imageBytes);
+        if (image == null) return;
+        // Определяем соотношения сторон
+        final imageAspectRatio = image.width / image.height;
+        final boxAspectRatio = childBox.size.width / childBox.size.height;
 
-      // Коэффициенты масштабирования
-      double scaleX;
-      double scaleY;
-      var dx = 0.0;
-      var dy = 0.0;
+        // Коэффициенты масштабирования
+        double scaleX;
+        double scaleY;
+        var dx = 0.0;
+        var dy = 0.0;
 
-      if (imageAspectRatio > boxAspectRatio) {
-        // Если изображение шире контейнера, то масштабируется по высоте
-        scaleY = image.height / childBox.size.height;
-        scaleX = scaleY;
-        dx = (image.width - childBox.size.width * scaleX) / 2;
-      } else {
-        // Если контейнер шире изображения, то масштабируется по ширине
-        scaleX = image.width / childBox.size.width;
-        scaleY = scaleX;
-        dy = (image.height - childBox.size.height * scaleY) / 2;
+        if (imageAspectRatio > boxAspectRatio) {
+          // Если изображение шире контейнера, то масштабируется по высоте
+          scaleY = image.height / childBox.size.height;
+          scaleX = scaleY;
+          dx = (image.width - childBox.size.width * scaleX) / 2;
+        } else {
+          // Если контейнер шире изображения, то масштабируется по ширине
+          scaleX = image.width / childBox.size.width;
+          scaleY = scaleX;
+          dy = (image.height - childBox.size.height * scaleY) / 2;
+        }
+
+        // Масштабируем позицию и размеры
+        final scalePosition = _result.position.scale(scaleX, scaleY);
+        final scaleRect = Rect.fromCenter(
+          center: Offset(scalePosition.dx + dx, scalePosition.dy + dy),
+          width: rect.width * scaleX,
+          height: rect.height * scaleY,
+        );
+
+        widget.onImageResize(cropFile(file, scaleRect));
+      } catch (e) {
+        throw Exception('Error decoding image file: $e');
       }
-
-      // Масштабируем позицию и размеры
-      final scalePosition = _result.position.scale(scaleX, scaleY);
-      final scaleRect = Rect.fromCenter(
-        center: Offset(scalePosition.dx + dx, scalePosition.dy + dy),
-        width: rect.width * scaleX,
-        height: rect.height * scaleY,
-      );
-
-      widget.onImageResize(cropFile(file, scaleRect));
     });
   }
 
