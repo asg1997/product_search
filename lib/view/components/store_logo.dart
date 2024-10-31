@@ -22,11 +22,14 @@ class StoreLogo extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: product.storeLogo != null
-              ? SvgPicture.asset(
-                  product.storeLogo!,
+              ? Container(
+                  alignment: Alignment.center,
                   width: 40,
                   height: 20,
-                  fit: BoxFit.scaleDown,
+                  child: SvgPicture.asset(
+                    product.storeLogo!,
+                    fit: BoxFit.scaleDown,
+                  ),
                 )
               : const SizedBox(
                   width: 24,

@@ -20,6 +20,10 @@ class ListProductItem extends ConsumerWidget {
   final Product product;
   final VoidCallback onImageTapped;
 
+  void onProductTapped(BuildContext context) {
+    ProductPage.navigate(context, product: product);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return LayoutBuilder(
@@ -42,7 +46,7 @@ class ListProductItem extends ConsumerWidget {
               Expanded(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () => ProductPage.navigate(context, product: product),
+                  onTap: () => onProductTapped(context),
                   child: Column(
                     children: [
                       if (!tablet) ...[
@@ -62,13 +66,17 @@ class ListProductItem extends ConsumerWidget {
               ),
               if (tablet) ...[
                 const Gap(24),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    PriceWidget(price: product.price),
-                    const Gap(10),
-                    StoreLogo(product: product),
-                  ],
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => onProductTapped(context),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PriceWidget(price: product.price),
+                      const Gap(10),
+                      StoreLogo(product: product),
+                    ],
+                  ),
                 ),
               ],
             ],

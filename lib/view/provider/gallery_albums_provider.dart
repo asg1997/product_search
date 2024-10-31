@@ -3,7 +3,12 @@ import 'package:photo_manager/photo_manager.dart';
 
 final galleryAlbumsPathsProvider =
     FutureProvider<List<AssetPathEntity>>((ref) async {
-  final permission = await PhotoManager.requestPermissionExtend();
+  final permission = await PhotoManager.requestPermissionExtend(
+    requestOption: const PermissionRequestOption(
+      androidPermission:
+          AndroidPermission(type: RequestType.image, mediaLocation: true),
+    ),
+  );
   if (!permission.isAuth) return [];
 
   final albums = await PhotoManager.getAssetPathList(
