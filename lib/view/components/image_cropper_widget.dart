@@ -34,44 +34,68 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWidget> {
   late TransformResult<Rect, Offset, Size> _result;
   final GlobalKey _childKey = GlobalKey();
 
+  File? _file;
+  img.Image? _image;
+
+  bool get initialized => _file != null && _image != null;
+
   Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    initImage();
+  }
+
+  Future<void> initImage() async {
+    await getImageFile();
+    await getImage();
+    setState(() {});
+  }
+
+  Future<void> getImageFile() async {
+    _file = switch (widget.image) {
+      FileImageSource(path: final path) => File(path),
+      NetworkImageSource(url: final url) => await downloadFileFromUrl(url),
+      AssetImageSource() => throw UnimplementedError(),
+    };
+  }
+
+  Future<File> downloadFileFromUrl(String url) async {
+    final file = await NetworkImageDownloader.downloadFile(url);
+    return file;
+  }
+
+  Future<void> getImage() async {
+    if (_file == null) return;
+    _image = await img.decodeImageFile(_file!.path);
+  }
 
   void onRectChanged(
     TransformResult<Rect, Offset, Size> result,
     DragUpdateDetails details,
   ) {
     rect = result.rect;
-
     _result = result;
     setState(() {});
-  }
-
-  Future<String> getImageFile() async {
-    return switch (widget.image) {
-      FileImageSource(path: final path) => path,
-      NetworkImageSource(url: final url) => await downloadFileFromUrl(url),
-      AssetImageSource() => throw UnimplementedError(),
-    };
   }
 
   void onResultChanged() {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 1200), () async {
+      if (!initialized) return;
       final childBox =
           _childKey.currentContext?.findRenderObject() as RenderBox?;
       if (childBox == null) return;
-
-      final file = await getImageFile();
 
       // Нужно рассчитать масштабные коэфициенты между экраном и изображением.
       // На телефоне картинка отображается, например, в масштабе 300 х 600,
       // Хотя реальный размер картинки 600 x 1200.
       // Поэтому может быть неверный расчет.
       // Рассчитывается как отношение реальной
-      final image = await img.decodeImageFile(file);
-      if (image == null) return;
+
       // Определяем соотношения сторон
-      final imageAspectRatio = image.width / image.height;
+      final imageAspectRatio = _image!.width / _image!.height;
       final boxAspectRatio = childBox.size.width / childBox.size.height;
 
       // Коэффициенты масштабирования
@@ -82,14 +106,14 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWidget> {
 
       if (imageAspectRatio > boxAspectRatio) {
         // Если изображение шире контейнера, то масштабируется по высоте
-        scaleY = image.height / childBox.size.height;
+        scaleY = _image!.height / childBox.size.height;
         scaleX = scaleY;
-        dx = (image.width - childBox.size.width * scaleX) / 2;
+        dx = (_image!.width - childBox.size.width * scaleX) / 2;
       } else {
         // Если контейнер шире изображения, то масштабируется по ширине
-        scaleX = image.width / childBox.size.width;
+        scaleX = _image!.width / childBox.size.width;
         scaleY = scaleX;
-        dy = (image.height - childBox.size.height * scaleY) / 2;
+        dy = (_image!.height - childBox.size.height * scaleY) / 2;
       }
 
       // Масштабируем позицию и размеры
@@ -99,8 +123,8 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWidget> {
         width: rect.width * scaleX,
         height: rect.height * scaleY,
       );
-
-      widget.onImageResize(cropFile(file, scaleRect));
+      final croppedFile = cropFile(_file!.path, scaleRect);
+      widget.onImageResize(croppedFile);
     });
   }
 
@@ -110,11 +134,6 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWidget> {
       cropRect: rect,
     );
     return cropped;
-  }
-
-  Future<String> downloadFileFromUrl(String url) async {
-    final file = await NetworkImageDownloader.downloadFile(url);
-    return file.path;
   }
 
   @override
@@ -128,55 +147,57 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWidget> {
             fit: BoxFit.cover,
           ),
         ),
-        Positioned.fill(
-          child: CustomPaint(
-            painter: _CustomPainter(rect),
+        if (initialized) ...[
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _CustomPainter(rect),
+            ),
           ),
-        ),
-        TransformableBox(
-          rect: rect,
-          sideHandleBuilder: (context, handle) {
-            return !handle.influencesVertical
-                ? const StyledVerticalDivider(
-                    color: Color(0xFFFACB7E),
-                    thickness: 4,
-                    lineStyle: DividerLineStyle.dashed,
-                  )
-                : const StyledDivider(
-                    color: Color(0xFFFACB7E),
-                    thickness: 4,
-                    lineStyle: DividerLineStyle.dashed,
-                  );
-          },
-          onDragEnd: (event) => onResultChanged(),
-          onResizeEnd: (_, __) => onResultChanged(),
-          cornerHandleBuilder: (context, handle) {
-            return Container(
-              height: 16,
-              width: 16,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFFACB7E),
-                    Color(0xFFF79C9C),
-                  ],
+          TransformableBox(
+            rect: rect,
+            sideHandleBuilder: (context, handle) {
+              return !handle.influencesVertical
+                  ? const StyledVerticalDivider(
+                      color: Color(0xFFFACB7E),
+                      thickness: 4,
+                      lineStyle: DividerLineStyle.dashed,
+                    )
+                  : const StyledDivider(
+                      color: Color(0xFFFACB7E),
+                      thickness: 4,
+                      lineStyle: DividerLineStyle.dashed,
+                    );
+            },
+            onDragEnd: (event) => onResultChanged(),
+            onResizeEnd: (_, __) => onResultChanged(),
+            cornerHandleBuilder: (context, handle) {
+              return Container(
+                height: 16,
+                width: 16,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFFACB7E),
+                      Color(0xFFF79C9C),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-          onChanged: onRectChanged,
-          contentBuilder: (_, rect, flip) {
-            return Transform.scale(
-              scaleX: flip.isHorizontal ? -1 : 1,
-              scaleY: flip.isVertical ? -1 : 1,
-              child: SizedBox(
-                width: rect.width,
-                height: rect.height,
-              ),
-            );
-          },
-        ),
+              );
+            },
+            onChanged: onRectChanged,
+            contentBuilder: (_, rect, flip) {
+              return Transform.scale(
+                scaleX: flip.isHorizontal ? -1 : 1,
+                scaleY: flip.isVertical ? -1 : 1,
+                child: SizedBox(
+                  width: rect.width,
+                  height: rect.height,
+                ),
+              );
+            },
+          ),
+        ],
       ],
     );
   }
