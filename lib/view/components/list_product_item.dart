@@ -38,10 +38,7 @@ class ListProductItem extends ConsumerWidget {
           child: Row(
             children: [
               // КАРТИНКА
-              GestureDetector(
-                onTap: onImageTapped,
-                child: _Image(productImage: product.image),
-              ),
+              _Image(productImage: product.image, onTap: onImageTapped),
               const Gap(12),
               Expanded(
                 child: GestureDetector(
@@ -111,8 +108,9 @@ class _ProductName extends StatelessWidget {
 }
 
 class _Image extends ConsumerWidget {
-  const _Image({required this.productImage});
+  const _Image({required this.productImage, required this.onTap});
   final String productImage;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -139,7 +137,7 @@ class _Image extends ConsumerWidget {
                 top: 12,
                 left: 12,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: onTap,
                   child: Image.asset(AppImages.search),
                 ),
               ),
