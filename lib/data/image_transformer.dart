@@ -36,24 +36,29 @@ class ImageTransformer {
   }
 
   Future<img.Image> _cropImage(String inputFile, Rect rect) async {
-    final image = await img.decodeImageFile(inputFile);
-    if (image == null) throw Exception('Unable to compress image');
+    try {
+      final bytes = await File(inputFile).readAsBytes();
+      final image = img.decodeImage(bytes);
+      if (image == null) throw Exception('Unable to compress image');
 
-    // final cropped = img.copyCrop(
-    //   image,
-    //   x: 0,
-    //   y: 0,
-    //   width: image.width,
-    //   height: image.height,
-    // );
-    final cropped = img.copyCrop(
-      image,
-      x: rect.center.dx.toInt(),
-      y: rect.center.dy.toInt(),
-      width: rect.width.toInt(),
-      height: rect.height.toInt(),
-    );
-    return cropped;
+      // final cropped = img.copyCrop(
+      //   image,
+      //   x: 0,
+      //   y: 0,
+      //   width: image.width,
+      //   height: image.height,
+      // );
+      final cropped = img.copyCrop(
+        image,
+        x: rect.center.dx.toInt(),
+        y: rect.center.dy.toInt(),
+        width: rect.width.toInt(),
+        height: rect.height.toInt(),
+      );
+      return cropped;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<File> _convertToWebP(String inputFile) async {

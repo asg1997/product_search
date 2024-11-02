@@ -123,7 +123,8 @@ class _ImageCropperWrapperState extends ConsumerState<ImageCropperWidget> {
         width: rect.width * scaleX,
         height: rect.height * scaleY,
       );
-      widget.onImageResize(cropFile(_file!.path, scaleRect));
+      final croppedFile = cropFile(_file!.path, scaleRect);
+      widget.onImageResize(croppedFile);
     });
   }
 
