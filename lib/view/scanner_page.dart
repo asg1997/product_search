@@ -281,8 +281,8 @@ class _CameraButton extends ConsumerWidget {
           shape: BoxShape.circle,
           color: const Color(0xFF0A2738).withOpacity(.5),
         ),
-        width: 72,
-        height: 72,
+        width: 73,
+        height: 73,
         child: const Icon(
           Icons.camera_alt,
           color: Color(0xFFFACB7E),
