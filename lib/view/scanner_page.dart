@@ -44,7 +44,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
 
   Future<void> initCamera() async {
     final cameras = await availableCameras();
-    controller = CameraController(cameras.first, ResolutionPreset.max);
+    controller = CameraController(cameras.first, ResolutionPreset.high);
     await controller?.initialize();
     if (!mounted) return;
     setState(() {});
