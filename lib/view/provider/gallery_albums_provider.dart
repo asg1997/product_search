@@ -1,15 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 final galleryAlbumsPathsProvider =
     FutureProvider<List<AssetPathEntity>>((ref) async {
   // Запрос разрешений на доступ к камере и фотографиям
-  final cameraStatus = await Permission.camera.request();
-  final photoStatus = await Permission.photos.request();
+  final status = await PhotoManager.requestPermissionExtend(
+    requestOption: const PermissionRequestOption(
+      androidPermission: AndroidPermission(
+        type: RequestType.image,
+        mediaLocation: false,
+      ),
+    ),
+  );
 
   // Проверяем, дали ли разрешения
-  if (cameraStatus.isDenied || photoStatus.isDenied) {
+  if (status == PermissionState.denied) {
     return [];
   }
 
